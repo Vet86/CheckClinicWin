@@ -14,6 +14,9 @@ namespace CheckClinicUI
 
     public class ResponseModel
     {
+        [JsonProperty("IdSpesiality")]
+        public int Id { get; set; }
+
         [JsonProperty("NameSpesiality")]
         public string DoctorName { get; set; }
 

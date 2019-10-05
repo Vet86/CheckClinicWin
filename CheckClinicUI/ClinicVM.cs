@@ -6,6 +6,7 @@ namespace CheckClinicUI
 {
     class ClinicVM
     {
+        public ClinicModel Model { get; private set; }
         public ClinicVM(ClinicId clinicId)
         {
             var client = new RestClient("https://www.gorzdrav.spb.ru/api/check_clinic/");
@@ -16,7 +17,7 @@ namespace CheckClinicUI
             request.AddParameter("clinic_form-clinic_id", ((int)clinicId).ToString(), ParameterType.GetOrPost);
             IRestResponse response = client.Execute(request);
             string json = response.Content;
-            ClinicModel clinicModel = JsonConvert.DeserializeObject<ClinicModel>(json);
+            Model = JsonConvert.DeserializeObject<ClinicModel>(json);
         }
     }
 }

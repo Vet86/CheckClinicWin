@@ -62,7 +62,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="SpecialityModel.cs" />
     <Compile Include="ClinicModel.cs" />
+    <Compile Include="SpecialityVM.cs" />
     <Compile Include="StaticData.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -7,6 +7,38 @@
         mc:Ignorable="d"
         Title="Детская поликлина №62" Height="450" Width="800">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <ListBox
+            SelectionChanged="ListBox_SelectionChanged"
+            ItemsSource="{Binding ResponseModels}"
+            x:Name="lbClinic"
+            >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="0,2" Orientation="Horizontal">
+                        <TextBlock Text="{Binding Path=DoctorName}" />
+                        <TextBlock Text="{Binding Path=FreeTickets}" Margin="8,0,0,0" FontWeight="Bold"  />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <ListBox
+            Grid.Column="1"
+            ItemsSource="{Binding ResponseModels}"
+            x:Name="lbSpec"
+            >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="0,2" Orientation="Horizontal">
+                        <TextBlock Text="{Binding Path=DoctorName}" />
+                        <TextBlock Text="{Binding Path=FreeTickets}" Margin="8,0,0,0" FontWeight="Bold"  />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </Window>
