@@ -62,6 +62,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="MainVM.cs" />
+    <Compile Include="NotifyPropertyChangedBase.cs" />
     <Compile Include="SpecialityModel.cs" />
     <Compile Include="ClinicModel.cs" />
     <Compile Include="SpecialityVM.cs" />

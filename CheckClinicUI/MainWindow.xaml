@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CheckClinicUI"
         mc:Ignorable="d"
         Title="Детская поликлина №62" Height="450" Width="800">
     <Grid>
@@ -13,7 +12,7 @@
         </Grid.ColumnDefinitions>
         <ListBox
             SelectionChanged="ListBox_SelectionChanged"
-            ItemsSource="{Binding ResponseModels}"
+            ItemsSource="{Binding Clinic.Model.ResponseModels}"
             x:Name="lbClinic"
             >
             <ListBox.ItemTemplate>
@@ -28,7 +27,7 @@
 
         <ListBox
             Grid.Column="1"
-            ItemsSource="{Binding ResponseModels}"
+            ItemsSource="{Binding Speciality.Model.ResponseModels}"
             x:Name="lbSpec"
             >
             <ListBox.ItemTemplate>

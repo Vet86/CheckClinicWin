@@ -8,10 +8,11 @@ namespace CheckClinicUI
     /// </summary>
     public partial class MainWindow : Window
     {
+        MainVM _mainVM = new MainVM();
         public MainWindow()
         {
             InitializeComponent();
-            lbClinic.DataContext = new ClinicVM(StaticData.ClinicId.Clinic62).Model;
+            DataContext = _mainVM;
         }
 
         private void ListBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -19,7 +20,7 @@ namespace CheckClinicUI
             if (e.AddedItems.Count == 0)
                 return;
             ResponseModel responseModel = (ResponseModel)e.AddedItems[0];
-            lbSpec.DataContext = new SpecialityVM(StaticData.ClinicId.Clinic62, responseModel.Id).Model;
+            _mainVM.Speciality.Init(StaticData.ClinicId.Clinic62, responseModel.Id);
         }
     }
 }
