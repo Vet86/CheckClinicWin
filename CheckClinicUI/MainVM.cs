@@ -18,6 +18,7 @@ namespace CheckClinicUI
         private StaticData.ClinicId _clinic = StaticData.ClinicId.Clinic62;
         private int? _speciality;
         private TicketIncreaseNotifier _ticketIncreaseNotifier;
+        private MailNotifier _mailNotifier = new MailNotifier();
 
         public MainVM()
         {
@@ -30,16 +31,29 @@ namespace CheckClinicUI
             Speciality = new SpecialityVM(SpecialityJsonFile);
             _ticketIncreaseNotifier = new TicketIncreaseNotifier(Speciality);
             _ticketIncreaseNotifier.TicketIncreaseHandler += onTicketIncrease;
-            _timer.Interval = TimeSpan.FromSeconds(5);
+            _timer.Interval = TimeSpan.FromSeconds(10);
             _timer.Tick += onTimerTick;
             _timer.Start();
+        }
 
-            MailNotifier mailNotifier = new MailNotifier();
-            mailNotifier.SendEmailAsync();
+        public string Mail
+        {
+            get
+            {
+                return _mailNotifier.MailReceiver;
+            }
+            set
+            {
+                if (_mailNotifier.MailReceiver == value)
+                    return;
+
+                _mailNotifier.MailReceiver = value;
+            }
         }
 
         private void onTicketIncrease(ResponseDoctorModel responseDoctor)
         {
+            _mailNotifier.SendEmailAsync(responseDoctor);
         }
 
         internal void SetSpeciality(int speciality)

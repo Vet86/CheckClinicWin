@@ -6,11 +6,22 @@
         mc:Ignorable="d"
         Title="Детская поликлина №62" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0">
+            <StackPanel>
+                <TextBlock Text="Почтовый ящик"/>
+                <ComboBox Text="{Binding Mail, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" IsEditable="True"/>
+            </StackPanel>
+        </Grid>
         <ListBox
+            Grid.Row="1"
             SelectionChanged="ListBox_SelectionChanged"
             ItemsSource="{Binding Clinic.Model.ResponseModels}"
             x:Name="lbClinic"
@@ -26,6 +37,7 @@
         </ListBox>
 
         <ListBox
+            Grid.Row="1"
             Grid.Column="1"
             ItemsSource="{Binding Speciality.SelectModel.ResponseModels}"
             x:Name="lbSpec"

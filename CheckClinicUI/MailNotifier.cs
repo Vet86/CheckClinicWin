@@ -11,13 +11,13 @@ namespace CheckClinicUI
         public string PasswordSender { get; set; } = "huvgkmmnuzdcufkq";
         public string NameSender { get; set; } = "CheckClinicBot";
         public string MailReceiver { get; set; } = "vitalyev_aleksey@mail.ru";
-        public async Task SendEmailAsync()
+        public async Task SendEmailAsync(ResponseDoctorModel responseDoctor)
         {
             MailAddress from = new MailAddress(MailSender, NameSender);
             MailAddress to = new MailAddress(MailReceiver);
             MailMessage m = new MailMessage(from, to);
-            m.Subject = "Тест";
-            m.Body = "Письмо-тест 2 работы smtp-клиента";
+            m.Subject = $"{responseDoctor.DoctorName} новые номерки";
+            m.Body = $"У доктора {responseDoctor.DoctorName} {responseDoctor.FreeTickets} номерков";
             SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587)
             {
                 UseDefaultCredentials = true,
