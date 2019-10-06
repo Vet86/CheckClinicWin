@@ -31,9 +31,10 @@ namespace CheckClinicUI
             Speciality = new SpecialityVM(SpecialityJsonFile);
             _ticketIncreaseNotifier = new TicketIncreaseNotifier(Speciality);
             _ticketIncreaseNotifier.TicketIncreaseHandler += onTicketIncrease;
-            _timer.Interval = TimeSpan.FromSeconds(10);
+            _timer.Interval = TimeSpan.FromMinutes(1);
             _timer.Tick += onTimerTick;
             _timer.Start();
+            onTimerAsync();
         }
 
         public bool UpdateDataFromServer { get; set; } = true;
@@ -62,6 +63,7 @@ namespace CheckClinicUI
         {
             _speciality = speciality;
             Speciality.Init(SpecialityJsonFile, _clinic, _speciality.Value);
+            onTimerAsync();
         }
 
         private void onTimerTick(object sender, EventArgs e)
