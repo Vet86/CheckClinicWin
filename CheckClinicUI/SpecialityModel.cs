@@ -8,17 +8,32 @@ namespace CheckClinicUI
     {
         private Dictionary<string, ResponseDoctorModel> _idToResponseModel = new Dictionary<string, ResponseDoctorModel>();
 
-        [JsonProperty("response")]
-        public IList<ResponseDoctorModel> ResponseModels { get; set; }
+        private IList<ResponseDoctorModel> _responseModels;
 
-        public void Init()
+        public void SetId(int id)
         {
-            _idToResponseModel.Clear();
-            foreach (var response in ResponseModels)
+            Id = id;
+        }
+
+        [JsonProperty("response")]
+        public IList<ResponseDoctorModel> ResponseModels
+        {
+            get
             {
-                _idToResponseModel.Add(response.Id, response);
+                return _responseModels;
+            }
+            set
+            {
+                _responseModels = value;
+                _idToResponseModel.Clear();
+                foreach (var response in ResponseModels)
+                {
+                    _idToResponseModel.Add(response.Id, response);
+                }
             }
         }
+
+        public int Id { get; set; }
 
         internal bool UpdateTickets(SpecialityModel newModel)
         {
@@ -42,6 +57,8 @@ namespace CheckClinicUI
     {
         private int _freeTickets;
 
+        private bool _subscribe;
+
         [JsonProperty("IdDoc")]
         public string Id { get; set; }
 
@@ -62,6 +79,19 @@ namespace CheckClinicUI
 
                 _freeTickets = value;
                 FirePropertyChange(nameof(FreeTickets));
+            }
+        }
+
+        public bool Subscribe
+        {
+            get => _subscribe;
+            set
+            {
+                if (_subscribe == value)
+                    return;
+
+                _subscribe = value;
+                FirePropertyChange(nameof(Subscribe));
             }
         }
     }

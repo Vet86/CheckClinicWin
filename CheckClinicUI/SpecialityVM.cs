@@ -1,61 +1,101 @@
 ﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using static CheckClinicUI.StaticData;
 
 namespace CheckClinicUI
 {
     class SpecialityVM : NotifyPropertyChangedBase
     {
-        private SpecialityModel _model;
+        private SpecialityModel _selectModel;
         private readonly string _jsonFile;
         private ClinicId _clinicId;
-        private int _specialitiId;
+        private int? _specialitiId;
+
+        public Action<ResponseDoctorModel> SubscribeChangeHandler { get; set; }
+        public Action<ResponseDoctorModel> TicketChangeHandler { get; set; }
 
         public SpecialityVM(string jsonFile)
         {
             _jsonFile = jsonFile;
         }
 
-        public SpecialityModel Model
+        public SpecialityModel SelectModel
         {
-            get { return _model; }
+            get { return _selectModel; }
             set
             {
-                _model = value;
-                FirePropertyChange(nameof(Model));
+                _selectModel = value;
+                FirePropertyChange(nameof(SelectModel));
             }
         }
 
-        public void Init(string jsonFile,ClinicId clinicId, int specialitiId)
+        public List<SpecialityModel> Models { get; set; } = new List<SpecialityModel>();
+
+        public void Init(string jsonFile, ClinicId clinicId, int specialityId)
         {
-            Model = null;
             _clinicId = clinicId;
-            _specialitiId = specialitiId;
-            Recalc();
+            _specialitiId = specialityId;
+
+            var model = Models.FirstOrDefault(x => x.Id == specialityId);
+            SelectModel = model;
         }
 
         internal void Recalc()
         {
-            var file = string.Format(_jsonFile, (int)_clinicId, _specialitiId);
-            if (!File.Exists(file))
+            if (_specialitiId == null)
                 return;
 
-            var content = File.ReadAllText(file);
-            var newModel = JsonConvert.DeserializeObject<SpecialityModel>(content);
-            if (Model == null || Model.ResponseModels.Count != newModel.ResponseModels.Count)
+            var model = GetData();
+            if (model == null)
+                return;
+
+            if (SelectModel == null)
             {
-                Model = newModel;
-                Model.Init();
+                Models.Add(model);
+                SelectModel = model;
+                foreach(var m in model.ResponseModels)
+                {
+                    m.PropertyChanged += onResponseDoctorPropertyChanged;
+                }
             }
             else
             {
-                var res = Model.UpdateTickets(newModel);
+                var res = SelectModel.UpdateTickets(GetData());
                 if (!res)
                 {
-                    Model = newModel;
-                    Model.Init();
                 }
             }
+        }
+
+        private void onResponseDoctorPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            var responseModel = sender as ResponseDoctorModel;
+            if (responseModel == null)
+                return;
+
+            if (e.PropertyName == nameof(responseModel.Subscribe))
+                SubscribeChangeHandler?.Invoke(responseModel);
+
+            if (e.PropertyName == nameof(responseModel.FreeTickets))
+                TicketChangeHandler?.Invoke(responseModel);
+        }
+
+        private SpecialityModel GetData()
+        {
+            if (!_specialitiId.HasValue)
+                return null;
+
+            var file = string.Format(_jsonFile, (int)_clinicId, _specialitiId);
+            if (!File.Exists(file))
+                return null;
+
+            var content = File.ReadAllText(file);
+            var specialityModel = JsonConvert.DeserializeObject<SpecialityModel>(content);
+            specialityModel?.SetId(_specialitiId.Value);
+            return specialityModel;
         }
     }
 }

@@ -67,6 +67,7 @@
     <Compile Include="SpecialityModel.cs" />
     <Compile Include="ClinicModel.cs" />
     <Compile Include="SpecialityVM.cs" />
+    <Compile Include="TicketIncreaseNotifier.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

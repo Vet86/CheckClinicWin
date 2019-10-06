@@ -17,6 +17,7 @@ namespace CheckClinicUI
         private SpecialityJsonWriter _specialityJsonWriter = new SpecialityJsonWriter(SpecialityJsonFile);
         private StaticData.ClinicId _clinic = StaticData.ClinicId.Clinic62;
         private int? _speciality;
+        private TicketIncreaseNotifier _ticketIncreaseNotifier;
 
         public MainVM()
         {
@@ -27,6 +28,7 @@ namespace CheckClinicUI
 
             Clinic = new ClinicVM(ClinicJsonFile, _clinic);
             Speciality = new SpecialityVM(SpecialityJsonFile);
+            _ticketIncreaseNotifier = new TicketIncreaseNotifier(Speciality);
             _timer.Interval = TimeSpan.FromSeconds(5);
             _timer.Tick += onTimerTick;
             _timer.Start();
