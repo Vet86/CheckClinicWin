@@ -18,6 +18,8 @@
             <StackPanel>
                 <TextBlock Text="Почтовый ящик"/>
                 <ComboBox Text="{Binding Mail, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" IsEditable="True"/>
+
+                <CheckBox Content="Обновлять данные из сервера" IsChecked="{Binding UpdateDataFromServer, Mode=TwoWay}"/>
             </StackPanel>
         </Grid>
         <ListBox

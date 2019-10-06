@@ -36,6 +36,8 @@ namespace CheckClinicUI
             _timer.Start();
         }
 
+        public bool UpdateDataFromServer { get; set; } = true;
+
         public string Mail
         {
             get
@@ -69,9 +71,12 @@ namespace CheckClinicUI
 
         private async Task onTimerAsync()
         {
-            await _clinicJsonWriter.RequestProcessAsync(StaticData.ClinicId.Clinic62);
-            if (_speciality != null)
-                await _specialityJsonWriter.RequestProcessAsync(_clinic, _speciality.Value);
+            if (UpdateDataFromServer)
+            {
+                await _clinicJsonWriter.RequestProcessAsync(_clinic);
+                if (_speciality != null)
+                    await _specialityJsonWriter.RequestProcessAsync(_clinic, _speciality.Value);
+            }
 
             Clinic.Recalc();
             Speciality.Recalc();
