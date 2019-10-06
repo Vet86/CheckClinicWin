@@ -29,9 +29,17 @@ namespace CheckClinicUI
             Clinic = new ClinicVM(ClinicJsonFile, _clinic);
             Speciality = new SpecialityVM(SpecialityJsonFile);
             _ticketIncreaseNotifier = new TicketIncreaseNotifier(Speciality);
+            _ticketIncreaseNotifier.TicketIncreaseHandler += onTicketIncrease;
             _timer.Interval = TimeSpan.FromSeconds(5);
             _timer.Tick += onTimerTick;
             _timer.Start();
+
+            MailNotifier mailNotifier = new MailNotifier();
+            mailNotifier.SendEmailAsync();
+        }
+
+        private void onTicketIncrease(ResponseDoctorModel responseDoctor)
+        {
         }
 
         internal void SetSpeciality(int speciality)

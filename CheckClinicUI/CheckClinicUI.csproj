@@ -62,6 +62,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="MailNotifier.cs" />
     <Compile Include="MainVM.cs" />
     <Compile Include="NotifyPropertyChangedBase.cs" />
     <Compile Include="SpecialityModel.cs" />
