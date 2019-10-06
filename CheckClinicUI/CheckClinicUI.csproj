@@ -67,7 +67,6 @@
     <Compile Include="SpecialityModel.cs" />
     <Compile Include="ClinicModel.cs" />
     <Compile Include="SpecialityVM.cs" />
-    <Compile Include="StaticData.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -108,6 +107,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CheckClinicDataResolver\CheckClinicDataResolver.csproj">
+      <Project>{c7a4e98d-8b8b-4a12-80f5-f26a6bf509bf}</Project>
+      <Name>CheckClinicDataResolver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{8f7b07ef-f078-47dd-b87a-b0153e71d767}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

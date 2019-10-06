@@ -20,7 +20,7 @@ namespace CheckClinicUI
             if (e.AddedItems.Count == 0)
                 return;
             ResponseModel responseModel = (ResponseModel)e.AddedItems[0];
-            _mainVM.Speciality.Init(StaticData.ClinicId.Clinic62, responseModel.Id);
+            _mainVM.SetSpeciality(responseModel.Id);
         }
     }
 }
