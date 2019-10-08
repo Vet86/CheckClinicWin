@@ -14,7 +14,7 @@ namespace CheckClinicUI
         private ClinicId _clinicId;
         private int? _specialitiId;
 
-        public List<SpecialityModel> NotifySpecialities { get; private set; } = new List<SpecialityModel>();
+        public HashSet<int> NotifySpecialities { get; private set; } = new HashSet<int>();
         public Action<ResponseDoctorModel> SubscribeChangeHandler { get; set; }
         public Action<ResponseDoctorModel> TicketChangeHandler { get; set; }
 
@@ -94,9 +94,11 @@ namespace CheckClinicUI
             NotifySpecialities.Clear();
             foreach (var specModel in Models)
             {
-                if (specModel.ResponseModels.Any(x => x.Subscribe) || specModel.Id == _specialitiId)
-                    NotifySpecialities.Add(specModel);
+                if (specModel.ResponseModels.Any(x => x.Subscribe))
+                    NotifySpecialities.Add(specModel.Id);
             }
+            if (_specialitiId != null)
+                NotifySpecialities.Add(_specialitiId.Value);
         }
 
         private SpecialityModel GetData()

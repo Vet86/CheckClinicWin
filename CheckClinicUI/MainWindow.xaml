@@ -38,21 +38,14 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <ListBox
+        <DataGrid
             Grid.Row="1"
             Grid.Column="1"
             ItemsSource="{Binding Speciality.SelectModel.ResponseModels}"
             x:Name="lbSpec"
-            >
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Margin="0,2" Orientation="Horizontal">
-                        <TextBlock Text="{Binding Path=DoctorName}" />
-                        <TextBlock Text="{Binding Path=FreeTickets}" Margin="8,0,0,0" FontWeight="Bold"  />
-                        <CheckBox IsChecked="{Binding Path=Subscribe}" Margin="8,0,0,0" Content="Следить"  />
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+            HorizontalAlignment="Stretch"
+            CanUserAddRows="False"
+            CanUserDeleteRows="False">
+        </DataGrid>
     </Grid>
 </Window>

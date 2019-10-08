@@ -75,9 +75,9 @@ namespace CheckClinicUI
             if (UpdateDataFromServer)
             {
                 await _clinicJsonWriter.RequestProcessAsync(_clinic);
-                foreach (var specModel in Speciality.NotifySpecialities)
+                foreach (var specModel in Speciality.NotifySpecialities.ToArray())
                 {
-                    await _specialityJsonWriter.RequestProcessAsync(_clinic, specModel.Id);
+                    await _specialityJsonWriter.RequestProcessAsync(_clinic, specModel);
                 }
             }
 
