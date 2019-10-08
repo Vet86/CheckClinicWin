@@ -15,6 +15,7 @@ namespace CheckClinicUI
         private int? _specialitiId;
 
         public HashSet<int> NotifySpecialities { get; private set; } = new HashSet<int>();
+        public List<SpecialityModel> NotifyModels { get; private set; } = new List<SpecialityModel>();
         public Action<ResponseDoctorModel> SubscribeChangeHandler { get; set; }
         public Action<ResponseDoctorModel> TicketChangeHandler { get; set; }
 
@@ -50,11 +51,8 @@ namespace CheckClinicUI
             if (_specialitiId == null)
                 return;
 
-            var model = GetData();
-            if (model == null)
-                return;
-
-            if (SelectModel == null)
+            var model = GetData(_specialitiId.Value);
+            if (model != null && SelectModel == null)
             {
                 Models.Add(model);
                 SelectModel = model;
@@ -64,12 +62,9 @@ namespace CheckClinicUI
                     m.PropertyChanged += onResponseDoctorPropertyChanged;
                 }
             }
-            else
+            foreach (var notifyModel in NotifyModels)
             {
-                var res = SelectModel.UpdateTickets(GetData());
-                if (!res)
-                {
-                }
+                var res = notifyModel.UpdateTickets(GetData(notifyModel.Id));
             }
         }
 
@@ -92,27 +87,28 @@ namespace CheckClinicUI
         private void regenerateNotifiers()
         {
             NotifySpecialities.Clear();
+            NotifyModels.Clear();
             foreach (var specModel in Models)
             {
                 if (specModel.ResponseModels.Any(x => x.Subscribe))
+                {
                     NotifySpecialities.Add(specModel.Id);
+                    NotifyModels.Add(specModel);
+                }
             }
             if (_specialitiId != null)
                 NotifySpecialities.Add(_specialitiId.Value);
         }
 
-        private SpecialityModel GetData()
+        private SpecialityModel GetData(int specialitiId)
         {
-            if (!_specialitiId.HasValue)
-                return null;
-
-            var file = string.Format(_jsonFile, (int)_clinicId, _specialitiId);
+            var file = string.Format(_jsonFile, (int)_clinicId, specialitiId);
             if (!File.Exists(file))
                 return null;
 
             var content = File.ReadAllText(file);
             var specialityModel = JsonConvert.DeserializeObject<SpecialityModel>(content);
-            specialityModel?.SetId(_specialitiId.Value);
+            specialityModel?.SetId(specialitiId);
             return specialityModel;
         }
     }

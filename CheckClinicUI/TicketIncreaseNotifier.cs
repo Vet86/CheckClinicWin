@@ -20,13 +20,9 @@ namespace CheckClinicUI
                 return;
 
             if (responseDoctorModel.FreeTickets > _idToTickets[responseDoctorModel.Id])
-            {
                 TicketIncreaseHandler?.Invoke(responseDoctorModel);
-            }
-            else
-            {
-                _idToTickets[responseDoctorModel.Id] = responseDoctorModel.FreeTickets;
-            }
+
+            _idToTickets[responseDoctorModel.Id] = responseDoctorModel.FreeTickets;
         }
 
         private void onSubscribeChanged(ResponseDoctorModel responseDoctorModel)
