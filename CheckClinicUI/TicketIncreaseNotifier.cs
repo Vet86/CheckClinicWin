@@ -6,14 +6,15 @@ namespace CheckClinicUI
     class TicketIncreaseNotifier
     {
         private readonly Dictionary<string, int> _idToTickets = new Dictionary<string, int>();
-        public Action<ResponseDoctorModel> TicketIncreaseHandler {get;set;}
+        public Action<ResponseDoctorModel> TicketIncreaseHandler { get; set; }
+
         public TicketIncreaseNotifier(SpecialityVM specialityVM)
         {
-            specialityVM.SubscribeChangeHandler += OnSubscribeChanged;
-            specialityVM.TicketChangeHandler += OnTicketsChanged;
+            specialityVM.SubscribeChangeHandler += onSubscribeChanged;
+            specialityVM.TicketChangeHandler += onTicketsChanged;
         }
 
-        private void OnTicketsChanged(ResponseDoctorModel responseDoctorModel)
+        private void onTicketsChanged(ResponseDoctorModel responseDoctorModel)
         {
             if (!_idToTickets.ContainsKey(responseDoctorModel.Id))
                 return;
@@ -28,7 +29,7 @@ namespace CheckClinicUI
             }
         }
 
-        private void OnSubscribeChanged(ResponseDoctorModel responseDoctorModel)
+        private void onSubscribeChanged(ResponseDoctorModel responseDoctorModel)
         {
             if (responseDoctorModel.Subscribe)
             {

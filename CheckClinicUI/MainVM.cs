@@ -1,6 +1,7 @@
 ﻿using CheckClinicDataResolver;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 
@@ -16,7 +17,6 @@ namespace CheckClinicUI
         private ClinicJsonWriter _clinicJsonWriter = new ClinicJsonWriter(ClinicJsonFile);
         private SpecialityJsonWriter _specialityJsonWriter = new SpecialityJsonWriter(SpecialityJsonFile);
         private StaticData.ClinicId _clinic = StaticData.ClinicId.Clinic62;
-        private int? _speciality;
         private TicketIncreaseNotifier _ticketIncreaseNotifier;
         private MailNotifier _mailNotifier = new MailNotifier();
 
@@ -61,8 +61,7 @@ namespace CheckClinicUI
 
         internal void SetSpeciality(int speciality)
         {
-            _speciality = speciality;
-            Speciality.Init(SpecialityJsonFile, _clinic, _speciality.Value);
+            Speciality.Init(SpecialityJsonFile, _clinic, speciality);
             onTimerAsync();
         }
 
@@ -76,8 +75,10 @@ namespace CheckClinicUI
             if (UpdateDataFromServer)
             {
                 await _clinicJsonWriter.RequestProcessAsync(_clinic);
-                if (_speciality != null)
-                    await _specialityJsonWriter.RequestProcessAsync(_clinic, _speciality.Value);
+                foreach (var specModel in Speciality.NotifySpecialities.ToArray())
+                {
+                    await _specialityJsonWriter.RequestProcessAsync(_clinic, specModel);
+                }
             }
 
             Clinic.Recalc();

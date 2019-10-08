@@ -14,6 +14,7 @@ namespace CheckClinicUI
         private ClinicId _clinicId;
         private int? _specialitiId;
 
+        public HashSet<int> NotifySpecialities { get; private set; } = new HashSet<int>();
         public Action<ResponseDoctorModel> SubscribeChangeHandler { get; set; }
         public Action<ResponseDoctorModel> TicketChangeHandler { get; set; }
 
@@ -41,6 +42,7 @@ namespace CheckClinicUI
 
             var model = Models.FirstOrDefault(x => x.Id == specialityId);
             SelectModel = model;
+            regenerateNotifiers();
         }
 
         internal void Recalc()
@@ -56,7 +58,8 @@ namespace CheckClinicUI
             {
                 Models.Add(model);
                 SelectModel = model;
-                foreach(var m in model.ResponseModels)
+                regenerateNotifiers();
+                foreach (var m in model.ResponseModels)
                 {
                     m.PropertyChanged += onResponseDoctorPropertyChanged;
                 }
@@ -77,10 +80,25 @@ namespace CheckClinicUI
                 return;
 
             if (e.PropertyName == nameof(responseModel.Subscribe))
+            {
                 SubscribeChangeHandler?.Invoke(responseModel);
+                regenerateNotifiers();
+            }
 
             if (e.PropertyName == nameof(responseModel.FreeTickets))
                 TicketChangeHandler?.Invoke(responseModel);
+        }
+
+        private void regenerateNotifiers()
+        {
+            NotifySpecialities.Clear();
+            foreach (var specModel in Models)
+            {
+                if (specModel.ResponseModels.Any(x => x.Subscribe))
+                    NotifySpecialities.Add(specModel.Id);
+            }
+            if (_specialitiId != null)
+                NotifySpecialities.Add(_specialitiId.Value);
         }
 
         private SpecialityModel GetData()
