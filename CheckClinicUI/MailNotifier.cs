@@ -30,9 +30,19 @@ namespace CheckClinicUI
                 UseDefaultCredentials = true,
                 Credentials = new NetworkCredential(MailSender, PasswordSender),
                 EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,                
+                DeliveryMethod = SmtpDeliveryMethod.Network,
             };
             await smtp.SendMailAsync(mailMessage);
+        }
+
+        internal async Task SendTestMailAsync()
+        {
+            var responseDoctor = new ResponseDoctorModel()
+            {
+                DoctorName = "Test doctor",
+                FreeTickets = 7
+            };
+            await SendEmailAsync(responseDoctor);
         }
     }
 }

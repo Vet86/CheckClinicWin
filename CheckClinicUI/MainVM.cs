@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace CheckClinicUI
@@ -33,11 +34,19 @@ namespace CheckClinicUI
             _ticketIncreaseNotifier.TicketIncreaseHandler += onTicketIncrease;
             _timer.Interval = TimeSpan.FromMinutes(1);
             _timer.Tick += onTimerTick;
+            CheckMailSenderCommand = new RelayCommand(x => checkMail(), y => true);
             _timer.Start();
             onTimerAsync();
         }
 
+        private void checkMail()
+        {
+            _mailNotifier.SendTestMailAsync();
+        }
+
         public bool UpdateDataFromServer { get; set; } = true;
+
+        public ICommand CheckMailSenderCommand { get; set; }
 
         public string Mail
         {

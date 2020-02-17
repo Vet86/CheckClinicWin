@@ -65,6 +65,7 @@
     <Compile Include="MailNotifier.cs" />
     <Compile Include="MainVM.cs" />
     <Compile Include="NotifyPropertyChangedBase.cs" />
+    <Compile Include="RelayCommand.cs" />
     <Compile Include="SpecialityModel.cs" />
     <Compile Include="ClinicModel.cs" />
     <Compile Include="SpecialityVM.cs" />
