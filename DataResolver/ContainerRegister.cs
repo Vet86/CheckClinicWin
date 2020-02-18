@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using CheckClinic.DataResolver;
 
 namespace CheckClinicDataResolver
 {

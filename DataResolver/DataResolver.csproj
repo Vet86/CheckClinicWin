@@ -7,8 +7,8 @@
     <ProjectGuid>{C7A4E98D-8B8B-4A12-80F5-F26A6BF509BF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CheckClinicDataResolver</RootNamespace>
-    <AssemblyName>CheckClinicDataResolver</AssemblyName>
+    <RootNamespace>CheckClinic.DataResolver</RootNamespace>
+    <AssemblyName>DataResolver</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

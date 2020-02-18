@@ -1,4 +1,5 @@
-﻿using RestSharp;
+﻿using CheckClinic.DataResolver;
+using RestSharp;
 
 namespace CheckClinicDataResolver
 {

@@ -2,8 +2,8 @@
 /CheckClinicUI/bin
 /CheckClinicUI/obj
 /CheckClinicUI/packages
-/CheckClinicDataResolver/bin
-/CheckClinicDataResolver/obj
+/DataResolver/bin
+/DataResolver/obj
 /Model/bin
 /Model/obj
 /CheckClinicUINew/bin
