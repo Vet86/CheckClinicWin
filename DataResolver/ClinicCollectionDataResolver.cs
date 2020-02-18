@@ -1,17 +1,18 @@
-﻿using CheckClinic.DataResolver;
-using RestSharp;
+﻿using RestSharp;
 
 namespace CheckClinicDataResolver
 {
-    public class DistrictCollectionDataResolver
+    public class ClinicCollectionDataResolver
     {
-        public string RequestProcess(IRequestSettings requestSettings)
+        public string RequestProcess(string districtId)
         {
-            RestClient client = new RestClient(requestSettings.Site);
-            RestRequest request = new RestRequest(Method.GET);
+            RestClient client = new RestClient("https://www.gorzdrav.spb.ru/api/clinic_list/");
+            RestRequest request = new RestRequest(Method.POST);
             request.AddHeader("Referrer", "https://www.gorzdrav.spb.ru/signup/free/?");
             request.AddHeader("Host", "www.gorzdrav.spb.ru");
             request.AddHeader("X-Requested-With", "XMLHttpRequest");
+            request.AddParameter("district_form-district_id", districtId, ParameterType.GetOrPost);
+
 
             IRestResponse response = client.Execute(request);
             return response.Content;

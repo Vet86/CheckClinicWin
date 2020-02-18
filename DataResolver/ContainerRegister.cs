@@ -10,7 +10,7 @@ namespace CheckClinicDataResolver
         static ContainerRegister()
         {
             var builder = new ContainerBuilder();
-            builder.RegisterType<RequestSettings>().As<IDistrictCollectionRequestSettings>();
+            builder.RegisterType<RequestSettings>().As<IRequestSettings>();
             Container = builder.Build();
         }
     }

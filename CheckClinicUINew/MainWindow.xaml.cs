@@ -11,11 +11,14 @@ namespace CheckClinicUINew
         public MainWindow()
         {
             InitializeComponent();
-            var settings = ContainerRegister.Container.Resolve<IDistrictCollectionRequestSettings>();
-            var districtCollectionJsonWriter = new DistrictCollectionDataResolver();
-            var html = districtCollectionJsonWriter.RequestProcess(settings);
-            DataParser dataParser = new DataParser();
-            var data = dataParser.ParseDistricts(html);
+            //var settings = ContainerRegister.Container.Resolve<IRequestSettings>();
+            //var districtCollectionDataResolver = new DistrictCollectionDataResolver();
+            //var html = districtCollectionDataResolver.RequestProcess(settings);
+            //DistrictCollectionParser dataParser = new DistrictCollectionParser();
+            //var data = dataParser.ParseDistricts(html);
+
+            var clinicCollectionJson = new ClinicCollectionDataResolver().RequestProcess("1");
+            var clinicCollectionModel = new ClinicCollectionParser().ParseClinics(clinicCollectionJson);
         }
     }
 }

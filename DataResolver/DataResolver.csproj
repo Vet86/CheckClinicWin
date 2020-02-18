@@ -63,9 +63,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContainerRegister.cs" />
+    <Compile Include="ClinicCollectionDataResolver.cs" />
     <Compile Include="DistrictCollectionDataResolver.cs" />
     <Compile Include="RequestSettings.cs" />
-    <Compile Include="IDistrictCollectionRequestSettings.cs" />
+    <Compile Include="IRequestSettings.cs" />
     <Compile Include="SpecialityJsonWriter.cs" />
     <Compile Include="ClinicJsonWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
