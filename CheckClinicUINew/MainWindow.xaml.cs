@@ -2,6 +2,7 @@
 using CheckClinic.DataParser;
 using CheckClinicDataResolver;
 using System.Windows;
+using CheckClinic.DataResolver;
 
 namespace CheckClinicUINew
 {

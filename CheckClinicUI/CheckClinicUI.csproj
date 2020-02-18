@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{DCDA1EC4-BCD7-47A1-AE6D-C11BB6294677}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>CheckClinicUI</RootNamespace>
+    <RootNamespace>CheckClinic.UI</RootNamespace>
     <AssemblyName>CheckClinicUI</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -112,7 +112,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CheckClinicDataResolver\CheckClinicDataResolver.csproj">
+    <ProjectReference Include="..\DataResolver\DataResolver.csproj">
       <Project>{c7a4e98d-8b8b-4a12-80f5-f26a6bf509bf}</Project>
       <Name>CheckClinicDataResolver</Name>
     </ProjectReference>

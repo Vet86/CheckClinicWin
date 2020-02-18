@@ -1,4 +1,4 @@
-﻿namespace CheckClinicDataResolver
+﻿namespace CheckClinic.DataResolver
 {
     public interface IDistrictCollectionRequestSettings
     {

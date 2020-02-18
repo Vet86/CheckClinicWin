@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckClinicUI", "CheckClini
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{8F7B07EF-F078-47DD-B87A-B0153E71D767}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckClinicDataResolver", "CheckClinicDataResolver\CheckClinicDataResolver.csproj", "{C7A4E98D-8B8B-4A12-80F5-F26A6BF509BF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataResolver", "DataResolver\DataResolver.csproj", "{C7A4E98D-8B8B-4A12-80F5-F26A6BF509BF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckClinicUINew", "CheckClinicUINew\CheckClinicUINew.csproj", "{F5CABA06-AFBF-42E9-8B10-523FC7FA61C6}"
 EndProject
