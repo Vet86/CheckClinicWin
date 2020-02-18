@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 
 namespace CheckClinicUI
@@ -84,7 +83,7 @@ namespace CheckClinicUI
 
         public bool Subscribe
         {
-            get => _subscribe;
+            get { return _subscribe; }
             set
             {
                 if (_subscribe == value)

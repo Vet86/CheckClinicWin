@@ -6,3 +6,9 @@
 /CheckClinicDataResolver/obj
 /Model/bin
 /Model/obj
+/CheckClinicUINew/bin
+/CheckClinicUINew/obj
+/DataParser/bin
+/DataParser/obj
+/packages
+/.vs/CheckClinic/v14/.suo
