@@ -1,6 +1,6 @@
 ﻿namespace CheckClinic.DataResolver
 {
-    public interface IDistrictCollectionRequestSettings
+    public interface IRequestSettings
     {
         string Site { get; }
     }

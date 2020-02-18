@@ -11,4 +11,6 @@
 /DataParser/bin
 /DataParser/obj
 /packages
-/.vs/CheckClinic/v14/.suo
+/.vs
+/DataResolver.Tests/bin
+/DataResolver.Tests/obj

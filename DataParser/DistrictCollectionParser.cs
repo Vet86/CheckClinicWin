@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CheckClinic.DataParser
 {
-    public class DataParser
+    public class DistrictCollectionParser
     {
         public IList<District> ParseDistricts(string html)
         {
