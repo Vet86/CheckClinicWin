@@ -48,6 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DoctorCollectionParser.cs" />
+    <Compile Include="SpecialityCollectionParser.cs" />
     <Compile Include="ClinicCollectionParser.cs" />
     <Compile Include="DistrictCollectionParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

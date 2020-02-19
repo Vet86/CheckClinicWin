@@ -114,7 +114,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DataResolver\DataResolver.csproj">
       <Project>{c7a4e98d-8b8b-4a12-80f5-f26a6bf509bf}</Project>
-      <Name>CheckClinicDataResolver</Name>
+      <Name>DataResolver</Name>
     </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{8f7b07ef-f078-47dd-b87a-b0153e71d767}</Project>

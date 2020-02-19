@@ -14,3 +14,5 @@
 /.vs
 /DataResolver.Tests/bin
 /DataResolver.Tests/obj
+/Complex.Tests/bin
+/Complex.Tests/obj
