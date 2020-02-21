@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{606AEEE1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataRequest", "DataRequest\DataRequest.csproj", "{757A87B2-BDCD-4452-A1DF-B3FA6A342B72}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckClinicConsole", "CheckClinicConsole\CheckClinicConsole.csproj", "{994FDBA3-0BA2-46F9-A6CD-03FAD5AA1F74}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{757A87B2-BDCD-4452-A1DF-B3FA6A342B72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{757A87B2-BDCD-4452-A1DF-B3FA6A342B72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{757A87B2-BDCD-4452-A1DF-B3FA6A342B72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{994FDBA3-0BA2-46F9-A6CD-03FAD5AA1F74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{994FDBA3-0BA2-46F9-A6CD-03FAD5AA1F74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{994FDBA3-0BA2-46F9-A6CD-03FAD5AA1F74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{994FDBA3-0BA2-46F9-A6CD-03FAD5AA1F74}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

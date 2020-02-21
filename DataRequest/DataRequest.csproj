@@ -7,7 +7,7 @@
     <ProjectGuid>{757A87B2-BDCD-4452-A1DF-B3FA6A342B72}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DataRequest</RootNamespace>
+    <RootNamespace>CheckClinic.DataRequest</RootNamespace>
     <AssemblyName>DataRequest</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -39,20 +39,13 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DataParser\DataParser.csproj">
-      <Project>{cd700974-fcb8-43ce-886d-e6669b0c4a63}</Project>
-      <Name>DataParser</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DataResolver\DataResolver.csproj">
-      <Project>{c7a4e98d-8b8b-4a12-80f5-f26a6bf509bf}</Project>
-      <Name>DataResolver</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{8f7b07ef-f078-47dd-b87a-b0153e71d767}</Project>
       <Name>Model</Name>

@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 
 namespace CheckClinic.DataParser
 {
-    public class TicketCollectionParser
+    public class TicketCollectionParser : ITicketCollectionParser
     {
         public TicketCollection Parse(string content)
         {

@@ -1,8 +1,9 @@
-﻿using RestSharp;
+﻿using CheckClinic.Model;
+using RestSharp;
 
 namespace CheckClinicDataResolver
 {
-    public class TicketCollectionDataResolver
+    public class TicketCollectionDataResolver : ITicketCollectionDataResolver
     {
         public string RequestProcess(string clinicId, string doctorId)
         {
