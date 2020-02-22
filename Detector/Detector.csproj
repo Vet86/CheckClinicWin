@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{994FDBA3-0BA2-46F9-A6CD-03FAD5AA1F74}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>CheckClinic.Console</RootNamespace>
-    <AssemblyName>CheckClinicConsole</AssemblyName>
+    <ProjectGuid>{6F158D5F-10F2-4F25-ADD6-89EF7E052356}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CheckClinic.Detector</RootNamespace>
+    <AssemblyName>Detector</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -56,24 +54,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CheckClinicConsoleModule.cs" />
+    <Compile Include="DetectorModule.cs" />
     <Compile Include="ContainerHolder.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Detector.cs" />
+    <Compile Include="ObserveDataComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Detector\Detector.csproj">
-      <Project>{6f158d5f-10f2-4f25-add6-89ef7e052356}</Project>
-      <Name>Detector</Name>
+    <ProjectReference Include="..\DataParser\DataParser.csproj">
+      <Project>{cd700974-fcb8-43ce-886d-e6669b0c4a63}</Project>
+      <Name>DataParser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataRequest\DataRequest.csproj">
+      <Project>{757a87b2-bdcd-4452-a1df-b3fa6a342b72}</Project>
+      <Name>DataRequest</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataResolver\DataResolver.csproj">
+      <Project>{c7a4e98d-8b8b-4a12-80f5-f26a6bf509bf}</Project>
+      <Name>DataResolver</Name>
     </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{8f7b07ef-f078-47dd-b87a-b0153e71d767}</Project>
       <Name>Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -47,6 +47,7 @@
     <Compile Include="Clinic.cs" />
     <Compile Include="ClinicCollection.cs" />
     <Compile Include="District.cs" />
+    <Compile Include="IDetector.cs" />
     <Compile Include="IObserveData.cs" />
     <Compile Include="ITicketCollectionDataResolver.cs" />
     <Compile Include="ITicketCollectionParser.cs" />
