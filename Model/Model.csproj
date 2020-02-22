@@ -50,6 +50,7 @@
     <Compile Include="IObserveData.cs" />
     <Compile Include="ITicketCollectionDataResolver.cs" />
     <Compile Include="ITicketCollectionParser.cs" />
+    <Compile Include="ObserveData.cs" />
     <Compile Include="Ticket.cs" />
     <Compile Include="Doctor.cs" />
     <Compile Include="TicketCollection.cs" />
