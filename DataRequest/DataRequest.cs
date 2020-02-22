@@ -26,6 +26,11 @@ namespace CheckClinic.DataRequest
             _observes.Add(observeData);
         }
 
+        public TicketCollection Receive(IObserveData observeData)
+        {
+            return receive(observeData);
+        }
+
         public void Remove(IObserveData observeData)
         {
             _observes.Remove(observeData);
@@ -51,10 +56,14 @@ namespace CheckClinic.DataRequest
         {
             foreach (var obs in _observes)
             {
-                var ticketCollectionJson = _ticketCollectionDataResolver.RequestProcess(obs.ClinicId, obs.DoctorId);
-                var ticketCollectionModel = _ticketCollectionParser.Parse(ticketCollectionJson);
-                NewDataReceived(obs, ticketCollectionModel);
+                NewDataReceived(obs, receive(obs));
             }
+        }
+
+        private TicketCollection receive(IObserveData observeData)
+        {
+            var ticketCollectionJson = _ticketCollectionDataResolver.RequestProcess(observeData.ClinicId, observeData.DoctorId);
+            return _ticketCollectionParser.Parse(ticketCollectionJson);
         }
     }
 }

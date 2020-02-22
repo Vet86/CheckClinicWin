@@ -10,5 +10,6 @@ namespace CheckClinic.Model
         void Start();
         void Stop();
         Action<IObserveData, TicketCollection> NewDataReceived { get; set; }
+        TicketCollection Receive(IObserveData observeData);
     }
 }
