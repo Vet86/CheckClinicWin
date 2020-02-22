@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Threading;
+using System.Threading;
 using CheckClinic.Model;
 
 namespace CheckClinic.DataRequest
@@ -8,7 +8,7 @@ namespace CheckClinic.DataRequest
     public class DataRequest : IDataRequest
     {
         private List<IObserveData> _observes = new List<IObserveData>();
-        private DispatcherTimer _timer = new DispatcherTimer() { Interval = TimeSpan.FromMinutes(1) };
+        private Timer _timer;
         private ITicketCollectionDataResolver _ticketCollectionDataResolver;
         private ITicketCollectionParser _ticketCollectionParser;
 
@@ -16,10 +16,10 @@ namespace CheckClinic.DataRequest
         {
             _ticketCollectionDataResolver = ticketCollectionDataResolver;
             _ticketCollectionParser = ticketCollectionParser;
-            _timer.Tick += ontTimerTick;
+            _timer = new Timer(onTimerTick, null, 0, 10000);
         }
 
-        public Action NewDataReceive { get; private set; }
+        public Action<IObserveData, TicketCollection> NewDataReceived { get; set; }
 
         public void Add(IObserveData observeData)
         {
@@ -33,25 +33,27 @@ namespace CheckClinic.DataRequest
 
         public void SetInterval(TimeSpan timeSpan)
         {
-            _timer.Interval = timeSpan;
+            System.Diagnostics.Debug.Assert(_timer.Change(0, (int)timeSpan.TotalMilliseconds));
         }
 
         public void Start()
         {
-            _timer.Start();
+            //_timer.
+            //ontTimerTick(null, null);
         }
 
         public void Stop()
         {
-            _timer.Stop();
+            //_timer.Stop();
         }
 
-        private void ontTimerTick(object sender, EventArgs e)
+        private void onTimerTick(object state)
         {
             foreach (var obs in _observes)
             {
-                var ticketCollectionJson = _ticketCollectionDataResolver.RequestProcess("255", "д62.51");
+                var ticketCollectionJson = _ticketCollectionDataResolver.RequestProcess(obs.ClinicId, obs.DoctorId);
                 var ticketCollectionModel = _ticketCollectionParser.Parse(ticketCollectionJson);
+                NewDataReceived(obs, ticketCollectionModel);
             }
         }
     }

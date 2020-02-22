@@ -9,6 +9,6 @@ namespace CheckClinic.Model
         void Remove(IObserveData observeData);
         void Start();
         void Stop();
-        Action NewDataReceive { get; }
+        Action<IObserveData, TicketCollection> NewDataReceived { get; set; }
     }
 }
