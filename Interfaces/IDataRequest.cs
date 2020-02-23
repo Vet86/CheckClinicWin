@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 
-namespace CheckClinic.Model
+namespace CheckClinic.Interfaces
 {
     public interface IDataRequest
     {
@@ -9,7 +10,7 @@ namespace CheckClinic.Model
         void Remove(IObserveData observeData);
         void Start();
         void Stop();
-        Action<IObserveData, TicketCollection> NewDataReceived { get; set; }
-        TicketCollection Receive(IObserveData observeData);
+        Action<IObserveData, IReadOnlyList<ITicket>> NewDataReceived { get; set; }
+        IReadOnlyList<ITicket> Receive(IObserveData observeData);
     }
 }

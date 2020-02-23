@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using CheckClinic.Model;
+using CheckClinic.Interfaces;
 
 namespace CheckClinic.DataRequest
 {
@@ -19,14 +19,14 @@ namespace CheckClinic.DataRequest
             _timer = new Timer(onTimerTick, null, 0, 10000);
         }
 
-        public Action<IObserveData, TicketCollection> NewDataReceived { get; set; }
+        public Action<IObserveData, IReadOnlyList<ITicket>> NewDataReceived { get; set; }
 
         public void Add(IObserveData observeData)
         {
             _observes.Add(observeData);
         }
 
-        public TicketCollection Receive(IObserveData observeData)
+        public IReadOnlyList<ITicket> Receive(IObserveData observeData)
         {
             return receive(observeData);
         }
@@ -60,7 +60,7 @@ namespace CheckClinic.DataRequest
             }
         }
 
-        private TicketCollection receive(IObserveData observeData)
+        private IReadOnlyList<ITicket> receive(IObserveData observeData)
         {
             var ticketCollectionJson = _ticketCollectionDataResolver.RequestProcess(observeData.ClinicId, observeData.DoctorId);
             return _ticketCollectionParser.Parse(ticketCollectionJson);

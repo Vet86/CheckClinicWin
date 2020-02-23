@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using CheckClinic.Model;
+using CheckClinic.Interfaces;
 
 namespace CheckClinic.Console
 {

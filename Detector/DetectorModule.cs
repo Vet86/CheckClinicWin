@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using CheckClinic.DataParser;
-using CheckClinic.Model;
+using CheckClinic.Interfaces;
 using CheckClinicDataResolver;
 
 namespace CheckClinic.Detector

@@ -1,4 +1,5 @@
-﻿using CheckClinic.Model;
+﻿using CheckClinic.Interfaces;
+using CheckClinic.Model;
 using System;
 using System.Collections.Generic;
 

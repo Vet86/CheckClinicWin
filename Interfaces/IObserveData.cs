@@ -1,4 +1,4 @@
-﻿namespace CheckClinic.Model
+﻿namespace CheckClinic.Interfaces
 {
     public interface IObserveData
     {

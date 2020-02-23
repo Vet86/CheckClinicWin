@@ -1,4 +1,6 @@
-﻿namespace CheckClinic.Model
+﻿using CheckClinic.Interfaces;
+
+namespace CheckClinic.Model
 {
     public class ObserveData : IObserveData
     {
