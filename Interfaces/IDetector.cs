@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CheckClinic.Model
+namespace CheckClinic.Interfaces
 {
     public interface IDetector
     {

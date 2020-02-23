@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckClinicConsole", "Check
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Detector", "Detector\Detector.csproj", "{6F158D5F-10F2-4F25-ADD6-89EF7E052356}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailSender", "MailSender\MailSender.csproj", "{B92F2B6E-F613-475D-B513-D2D73F110773}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interfaces", "Interfaces\Interfaces.csproj", "{EBD4F758-4880-4E76-B466-6BA46B46F14D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +75,14 @@ Global
 		{6F158D5F-10F2-4F25-ADD6-89EF7E052356}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F158D5F-10F2-4F25-ADD6-89EF7E052356}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F158D5F-10F2-4F25-ADD6-89EF7E052356}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B92F2B6E-F613-475D-B513-D2D73F110773}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B92F2B6E-F613-475D-B513-D2D73F110773}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B92F2B6E-F613-475D-B513-D2D73F110773}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B92F2B6E-F613-475D-B513-D2D73F110773}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBD4F758-4880-4E76-B466-6BA46B46F14D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBD4F758-4880-4E76-B466-6BA46B46F14D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBD4F758-4880-4E76-B466-6BA46B46F14D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBD4F758-4880-4E76-B466-6BA46B46F14D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

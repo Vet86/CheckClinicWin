@@ -81,6 +81,10 @@
       <Project>{c7a4e98d-8b8b-4a12-80f5-f26a6bf509bf}</Project>
       <Name>DataResolver</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Interfaces\Interfaces.csproj">
+      <Project>{ebd4f758-4880-4e76-b466-6ba46b46f14d}</Project>
+      <Name>Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{8F7B07EF-F078-47DD-B87A-B0153E71D767}</Project>
       <Name>Model</Name>

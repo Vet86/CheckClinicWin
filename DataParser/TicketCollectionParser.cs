@@ -1,11 +1,13 @@
-﻿using CheckClinic.Model;
+﻿using CheckClinic.Interfaces;
+using CheckClinic.Model;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace CheckClinic.DataParser
 {
     public class TicketCollectionParser : ITicketCollectionParser
     {
-        public TicketCollection Parse(string content)
+        public IReadOnlyList<ITicket> Parse(string content)
         {
             var ticketCollection = new TicketCollection();
             foreach (var level1Node in JObject.Parse(content).SelectTokens("response"))
@@ -22,7 +24,7 @@ namespace CheckClinic.DataParser
                     }
                 }
             }
-            return ticketCollection;
+            return new List<ITicket>(ticketCollection.Tickets);
         }
     }
 }

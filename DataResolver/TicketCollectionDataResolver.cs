@@ -1,4 +1,4 @@
-﻿using CheckClinic.Model;
+﻿using CheckClinic.Interfaces;
 using RestSharp;
 
 namespace CheckClinicDataResolver
