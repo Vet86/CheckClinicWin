@@ -24,7 +24,8 @@ namespace CheckClinic.DataParser
                     }
                 }
             }
-            return new List<ITicket>(ticketCollection.Tickets);
+            var ticketList = new List<ITicket>(ticketCollection.Tickets);
+            return ticketList;
         }
     }
 }

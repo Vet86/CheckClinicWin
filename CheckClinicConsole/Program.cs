@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using CheckClinic.Interfaces;
 using CheckClinic.Model;
+using CommandLineParser.Exceptions;
 
 namespace CheckClinic.Console
 {
@@ -8,9 +9,44 @@ namespace CheckClinic.Console
     {
         static void Main(string[] args)
         {
+            var parametersValid = false;
+            var argsParser = new ArgsParser();
+            while (!parametersValid)
+            {
+                parametersValid = true;
+                var parser = new CommandLineParser.CommandLineParser();
+                parser.ExtractArgumentAttributes(argsParser);
+                try
+                {
+                    parser.ParseCommandLine(args);
+                    parser.ShowParsedArguments();
+                    parametersValid = argsParser.IsValid();
+                }
+                catch (CommandLineException e)
+                {
+                    System.Console.WriteLine(e.Message);
+                    parametersValid = false;
+                }
+                if (!parametersValid)
+                {
+                    args = System.Console.ReadLine().Split(' ');
+                }
+            }
+            
             var detector = ContainerHolder.Container.Resolve<IDetector>();
-            //dataRequest.Add(new ObserveData("255", "д62.51"));
-            detector.Add(new ObserveData("255", "д62.62"));
+            foreach(var receiver in argsParser.GetMailReceivers())
+            {
+                detector.AddMailReceiver(receiver);
+            }
+
+            var doctorNames = argsParser.GetDoctorNames();
+            var doctorIds = argsParser.GetDoctorIds();
+            var clinicIds = argsParser.GetClinicIds();
+            for(int i = 0; i < doctorIds.Length; ++i)
+            {
+                detector.Add(new ObserveData(clinicIds[i], doctorIds[i]), doctorNames?[i]);
+            }
+
             System.Console.ReadKey();
         }
     }
