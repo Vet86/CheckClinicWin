@@ -1,9 +1,8 @@
 ﻿using CheckClinic.Interfaces;
-using System;
 
-namespace CheckClinic.Detector
+namespace CheckClinic.MailSettings
 {
-    class MailSettings : IMailSettings
+    public class MailSettings : IMailSettings
     {
         public string MailSender => "CheckClinicBot@gmail.com";
 
@@ -11,9 +10,8 @@ namespace CheckClinic.Detector
 
         public string NameSender => "CheckClinicBot";
 
-        public string SendEmail(string content)
-        {
-            throw new NotImplementedException();
-        }
+        public string Smtp => "smtp.gmail.com";
+
+        public int Port => 587;
     }
 }

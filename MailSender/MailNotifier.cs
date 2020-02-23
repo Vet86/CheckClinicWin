@@ -1,48 +1,57 @@
-﻿using System;
+﻿using CheckClinic.Interfaces;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
-using System.Threading.Tasks;
 
 namespace CheckClinic.MailNotifier
 {
-    class MailNotifier
+    public class MailNotifier : IMailNotifier
     {
-        /*public string MailSender { get; set; } = "CheckClinicBot@gmail.com";
-        public string PasswordSender { get; set; } = "huvgkmmnuzdcufkq";
-        public string NameSender { get; set; } = "CheckClinicBot";
-        public string MailReceiver { get; set; } = "vitalyev_aleksey@mail.ru;vitaleva_julia@mail.ru";
-        public async Task SendEmailAsync(ResponseDoctorModel responseDoctor)
+        private readonly IMailSettings _mailSettings;
+        private List<string> _receivers = new List<string>();
+
+        public MailNotifier(IMailSettings mailSettings)
+        {
+            _mailSettings = mailSettings;
+        }
+
+        public void AddReceiver(string receiver)
+        {
+            _receivers.Add(receiver);
+        }
+
+        public void AddReceivers(IEnumerable<string> receivers)
+        {
+            _receivers.AddRange(receivers);
+        }
+
+        public void ClearAllReceivers()
+        {
+            _receivers.Clear();
+        }
+
+        public void Send(string title, string content)
         {
             MailMessage mailMessage = new MailMessage
             {
-                From = new MailAddress(MailSender, NameSender)
+                From = new MailAddress(_mailSettings.MailSender, _mailSettings.NameSender)
             };
 
-            foreach (var address in MailReceiver.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var address in _receivers)
             {
                 mailMessage.To.Add(address);
             }
 
-            mailMessage.Subject = $"{responseDoctor.DoctorName} новые номерки";
-            mailMessage.Body = $"У доктора {responseDoctor.DoctorName} {responseDoctor.FreeTickets} номерков";
-            SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587)
+            mailMessage.Subject = title;
+            mailMessage.Body = content;
+            SmtpClient smtp = new SmtpClient(_mailSettings.Smtp, _mailSettings.Port)
             {
                 UseDefaultCredentials = true,
-                Credentials = new NetworkCredential(MailSender, PasswordSender),
+                Credentials = new NetworkCredential(_mailSettings.MailSender, _mailSettings.PasswordSender),
                 EnableSsl = true,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
             };
-            await smtp.SendMailAsync(mailMessage);
+            smtp.Send(mailMessage);
         }
-
-        internal async Task SendTestMailAsync()
-        {
-            var responseDoctor = new ResponseDoctorModel()
-            {
-                DoctorName = "Test doctor",
-                FreeTickets = 7
-            };
-            await SendEmailAsync(responseDoctor);
-        }*/
     }
 }

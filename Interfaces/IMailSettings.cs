@@ -5,6 +5,7 @@
         string MailSender { get; }
         string PasswordSender { get; }
         string NameSender { get; }
-        string SendEmail(string content);
+        string Smtp { get; }
+        int Port { get; }
     }
 }
