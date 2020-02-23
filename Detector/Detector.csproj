@@ -57,6 +57,7 @@
     <Compile Include="DetectorModule.cs" />
     <Compile Include="ContainerHolder.cs" />
     <Compile Include="Detector.cs" />
+    <Compile Include="MailTextPreparer.cs" />
     <Compile Include="TicketComparer.cs" />
     <Compile Include="ObserveDataComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -77,6 +78,10 @@
     <ProjectReference Include="..\Interfaces\Interfaces.csproj">
       <Project>{ebd4f758-4880-4e76-b466-6ba46b46f14d}</Project>
       <Name>Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MailSender\MailSender.csproj">
+      <Project>{b92f2b6e-f613-475d-b513-d2d73f110773}</Project>
+      <Name>MailSender</Name>
     </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{8f7b07ef-f078-47dd-b87a-b0153e71d767}</Project>

@@ -6,6 +6,7 @@ namespace CheckClinic.Interfaces
     {
         void AddReceiver(string receiver);
         void AddReceivers(IEnumerable<string> receivers);
-        void Send(IEnumerable<ITicket> tickets);
+        void ClearAllReceivers();
+        void Send(string title, string content);
     }
 }
