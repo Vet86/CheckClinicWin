@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckClinicUI", "CheckClinicUI\CheckClinicUI.csproj", "{DCDA1EC4-BCD7-47A1-AE6D-C11BB6294677}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{8F7B07EF-F078-47DD-B87A-B0153E71D767}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataResolver", "DataResolver\DataResolver.csproj", "{C7A4E98D-8B8B-4A12-80F5-F26A6BF509BF}"
@@ -35,10 +33,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DCDA1EC4-BCD7-47A1-AE6D-C11BB6294677}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DCDA1EC4-BCD7-47A1-AE6D-C11BB6294677}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DCDA1EC4-BCD7-47A1-AE6D-C11BB6294677}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DCDA1EC4-BCD7-47A1-AE6D-C11BB6294677}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8F7B07EF-F078-47DD-B87A-B0153E71D767}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8F7B07EF-F078-47DD-B87A-B0153E71D767}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F7B07EF-F078-47DD-B87A-B0153E71D767}.Release|Any CPU.ActiveCfg = Release|Any CPU

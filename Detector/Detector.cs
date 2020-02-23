@@ -10,22 +10,31 @@ namespace CheckClinic.Detector
     {
         private IDataRequest _dataRequest;
         private IMailNotifier _mailNotifier;
-        private Dictionary<IObserveData, IReadOnlyList<ITicket>> _data = new Dictionary<IObserveData, IReadOnlyList<ITicket>>(new ObserveDataComparer()); 
+        private Dictionary<IObserveData, IReadOnlyList<ITicket>> _data = new Dictionary<IObserveData, IReadOnlyList<ITicket>>(new ObserveDataComparer());
+        private Dictionary<IObserveData, string> _observeDataToDoctor = new Dictionary<IObserveData, string>(new ObserveDataComparer());
+        
         public Detector()
         {
             _dataRequest = ContainerHolder.Container.Resolve<IDataRequest>();
             _mailNotifier = ContainerHolder.Container.Resolve<IMailNotifier>();
             _dataRequest.NewDataReceived += onNewDataReceived;
-            _dataRequest.SetInterval(TimeSpan.FromSeconds(10));
+            _dataRequest.SetInterval(TimeSpan.FromMinutes(5));
         }
 
-        public void Add(IObserveData observeData)
+        public void Add(IObserveData observeData, string doctorName = null)
         {
+            if (_data.ContainsKey(observeData))
+                return;
+
             _dataRequest.Add(observeData);
-            _data.Add(observeData, _dataRequest.Receive(observeData));
+            var tickets = _dataRequest.Receive(observeData);
+            _data.Add(observeData, tickets);
+            string doctorText = doctorName ?? observeData.DoctorId;
+            System.Console.WriteLine($"{doctorText} has {tickets.Count()} tickets");
+            _observeDataToDoctor.Add(observeData, doctorName);
         }
 
-        public void Add(IObserveData observeData, DateTime dateTime)
+        public void Add(IObserveData observeData, DateTime dateTime, string doctorName = null)
         {
             throw new NotImplementedException();
         }
@@ -33,35 +42,46 @@ namespace CheckClinic.Detector
         public void Remove(IObserveData observeData)
         {
             if (_data.ContainsKey(observeData))
+            {
+                _data.Remove(observeData);
                 _dataRequest.Remove(observeData);
+                _observeDataToDoctor.Remove(observeData);
+            }
         }
 
         private void onNewDataReceived(IObserveData observeData, IReadOnlyList<ITicket> newTickets)
         {
             var cacheTickets = _data[observeData];
-            if (newTickets.Count != cacheTickets.Count)
+            var newAddedTickets = findNewTickets(cacheTickets, newTickets);
+            if (cacheTickets.Count != newTickets.Count)
             {
-                if (newTickets.Count > cacheTickets.Count)
-                {
-                    // Узнать, какой именно билет появился
-                    alarmNewTicket(observeData, findNewTickets(cacheTickets, newTickets));
-                }
-                _data[observeData] = newTickets;
+                System.Console.WriteLine($"{_observeDataToDoctor[observeData]} has {newTickets.Count} tickets");
             }
-            Console.WriteLine($"tickets: {newTickets.Count}");
+            if (newAddedTickets.Any())
+            {
+                alarmNewTicket(observeData, newAddedTickets);
+            }
+            _data[observeData] = newTickets;
         }
 
         private void alarmNewTicket(IObserveData observeData, IEnumerable<ITicket> newTickets)
         {
-            foreach (var ticket in newTickets)
+            foreach(var ticket in newTickets)
             {
-                Console.WriteLine($"{ticket.Id}");
+                System.Console.WriteLine($"{_observeDataToDoctor[observeData]} add new {ticket.Id} ticket");
             }
+            var mailTextPreparer = new MailTextPreparer(observeData, newTickets.ToList(), _observeDataToDoctor[observeData]);
+            _mailNotifier.Send(mailTextPreparer.Title, mailTextPreparer.Content);
         }
 
         private IEnumerable<ITicket> findNewTickets(IReadOnlyList<ITicket> oldCollection, IReadOnlyList<ITicket> newCollection)
         {
             return Enumerable.Except(newCollection, oldCollection, new TicketComparer());
+        }
+
+        public void AddMailReceiver(string mailReceiver)
+        {
+            _mailNotifier.AddReceiver(mailReceiver);
         }
     }
 }
