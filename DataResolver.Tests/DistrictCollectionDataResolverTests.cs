@@ -1,5 +1,6 @@
 ﻿using Autofac;
-using CheckClinic.DataResolver;
+using CheckClinic.Complex.Tests;
+using CheckClinic.Interfaces;
 using CheckClinicDataResolver;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -29,9 +30,9 @@ namespace DataResolver.Tests
         [DataRow("<li data-id=\"18\" onclick=\"\">Центральный</li>")]
         public void RequestProcessTest(string row)
         {
-            var settings = ContainerRegister.Container.Resolve<IRequestSettings>();
-            var districtCollectionJsonWriter = new DistrictCollectionDataResolver();
-            var html = districtCollectionJsonWriter.RequestProcess(settings);
+            var settings = ContainerHolder.Container.Resolve<IRequestSettings>();
+            var districtCollectionJsonWriter = new DistrictCollectionDataResolver(settings);
+            var html = districtCollectionJsonWriter.RequestProcess();
             Assert.IsTrue(html.Contains(row));
         }
     }

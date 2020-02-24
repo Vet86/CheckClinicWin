@@ -1,6 +1,8 @@
-﻿namespace CheckClinic.Model
+﻿using CheckClinic.Interfaces;
+
+namespace CheckClinic.Model
 {
-    public class District
+    public class District : IDistrict
     {
         public District(string id, string name)
         {

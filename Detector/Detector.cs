@@ -2,6 +2,7 @@
 using CheckClinic.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace CheckClinic.Detector
@@ -51,17 +52,25 @@ namespace CheckClinic.Detector
 
         private void onNewDataReceived(IObserveData observeData, IReadOnlyList<ITicket> newTickets)
         {
-            var cacheTickets = _data[observeData];
-            var newAddedTickets = findNewTickets(cacheTickets, newTickets);
-            if (cacheTickets.Count != newTickets.Count)
+            try
             {
-                System.Console.WriteLine($"{_observeDataToDoctor[observeData]} has {newTickets.Count} tickets");
+                File.AppendAllText($"log{DateTime.Now.ToShortDateString()}.txt", $"{DateTime.Now.ToString()}: {_observeDataToDoctor[observeData]} has {newTickets.Count} tickets\n");
+                var cacheTickets = _data[observeData];
+                var newAddedTickets = findNewTickets(cacheTickets, newTickets);
+                if (cacheTickets.Count != newTickets.Count)
+                {
+                    System.Console.WriteLine($"{_observeDataToDoctor[observeData]} has {newTickets.Count} tickets");
+                }
+                if (newAddedTickets.Any())
+                {
+                    alarmNewTicket(observeData, newAddedTickets);
+                }
+                _data[observeData] = newTickets;
             }
-            if (newAddedTickets.Any())
+            catch(Exception ex)
             {
-                alarmNewTicket(observeData, newAddedTickets);
+                File.AppendAllText($"log{DateTime.Now.ToShortDateString()}.txt", $"{DateTime.Now.ToString()}: {ex.Message}\n");
             }
-            _data[observeData] = newTickets;
         }
 
         private void alarmNewTicket(IObserveData observeData, IEnumerable<ITicket> newTickets)

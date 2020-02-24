@@ -14,7 +14,6 @@ namespace CheckClinic.Detector
             builder.RegisterType<DataRequest.DataRequest>().As<IDataRequest>();
             builder.RegisterType<MailSettings.MailSettings>().As<IMailSettings>();
             builder.RegisterType<MailNotifier.MailNotifier>().As<IMailNotifier>();
-            //builder.RegisterType<ObserveData>().As<IObserveData>().WithParameter(new TypedParameter(typeof(string), "clinicId";
             base.Load(builder);
         }
     }

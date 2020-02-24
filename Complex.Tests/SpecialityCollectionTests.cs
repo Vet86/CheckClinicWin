@@ -14,7 +14,7 @@ namespace Complex.Tests
         {
             var specialityCollectionJson = new SpecialityCollectionDataResolver().RequestProcess("591");
             var specialityCollectionModel = new SpecialityCollectionParser().ParseSpecialities(specialityCollectionJson);
-            Assert.AreEqual(9, specialityCollectionModel.Specialities.Count);
+            Assert.AreEqual(9, specialityCollectionModel.Count);
         }
     }
 }

@@ -1,13 +1,20 @@
-﻿using CheckClinic.DataResolver;
+﻿using CheckClinic.Interfaces;
 using RestSharp;
 
 namespace CheckClinicDataResolver
 {
-    public class DistrictCollectionDataResolver
+    public class DistrictCollectionDataResolver : IDistrictCollectionDataResolver
     {
-        public string RequestProcess(IRequestSettings requestSettings)
+        private readonly IRequestSettings _requestSettings;
+
+        public DistrictCollectionDataResolver(IRequestSettings requestSettings)
         {
-            RestClient client = new RestClient(requestSettings.Site);
+            _requestSettings = requestSettings;
+        }
+
+        public string RequestProcess()
+        {
+            RestClient client = new RestClient(_requestSettings.Site);
             RestRequest request = new RestRequest(Method.GET);
             request.AddHeader("Referrer", "https://www.gorzdrav.spb.ru/signup/free/?");
             request.AddHeader("Host", "www.gorzdrav.spb.ru");

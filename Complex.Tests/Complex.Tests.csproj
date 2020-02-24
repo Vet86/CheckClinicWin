@@ -62,6 +62,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComplexTestModule.cs" />
     <Compile Include="TicketCollectionTests.cs" />
     <Compile Include="DoctorCollectionTests.cs" />
     <Compile Include="SpecialityCollectionTests.cs" />

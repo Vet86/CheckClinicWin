@@ -38,7 +38,7 @@ namespace CheckClinic.DataRequest
 
         public void SetInterval(TimeSpan timeSpan)
         {
-            System.Diagnostics.Debug.Assert(_timer.Change(0, (int)timeSpan.TotalMilliseconds));
+            System.Diagnostics.Trace.Assert(_timer.Change(0, (int)timeSpan.TotalMilliseconds));
         }
 
         public void Start()
