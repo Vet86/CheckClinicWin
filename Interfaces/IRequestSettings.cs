@@ -1,4 +1,4 @@
-﻿namespace CheckClinic.DataResolver
+﻿namespace CheckClinic.Interfaces
 {
     public interface IRequestSettings
     {

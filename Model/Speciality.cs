@@ -1,11 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using CheckClinic.Interfaces;
+using Newtonsoft.Json;
 
 namespace CheckClinic.Model
 {
-    public class Speciality
+    public class Speciality : ISpeciality
     {
         [JsonProperty("IdSpesiality")]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("NameSpesiality")]
         public string DoctorName { get; set; }

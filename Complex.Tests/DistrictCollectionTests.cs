@@ -1,6 +1,7 @@
 ﻿using Autofac;
+using CheckClinic.Complex.Tests;
 using CheckClinic.DataParser;
-using CheckClinic.DataResolver;
+using CheckClinic.Interfaces;
 using CheckClinicDataResolver;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -12,9 +13,9 @@ namespace Complex.Tests
         [TestMethod]
         public void CountTest()
         {
-            var settings = ContainerRegister.Container.Resolve<IRequestSettings>();
-            var districtCollectionDataResolver = new DistrictCollectionDataResolver();
-            var html = districtCollectionDataResolver.RequestProcess(settings);
+            var settings = ContainerHolder.Container.Resolve<IRequestSettings>();
+            var districtCollectionDataResolver = new DistrictCollectionDataResolver(settings);
+            var html = districtCollectionDataResolver.RequestProcess();
             DistrictCollectionParser dataParser = new DistrictCollectionParser();
             var data = dataParser.ParseDistricts(html);
             Assert.AreEqual(18, data.Count);

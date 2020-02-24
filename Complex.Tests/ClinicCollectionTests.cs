@@ -30,7 +30,7 @@ namespace Complex.Tests
         {
             var clinicCollectionJson = new ClinicCollectionDataResolver().RequestProcess(id);
             var clinicCollectionModel = new ClinicCollectionParser().ParseClinics(clinicCollectionJson);
-            Assert.AreEqual(expectCount, clinicCollectionModel.ClinicModels.Count);
+            Assert.AreEqual(expectCount, clinicCollectionModel.Count);
         }
     }
 }

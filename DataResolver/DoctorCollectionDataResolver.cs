@@ -1,8 +1,9 @@
-﻿using RestSharp;
+﻿using CheckClinic.Interfaces;
+using RestSharp;
 
 namespace CheckClinicDataResolver
 {
-    public class DoctorCollectionDataResolver
+    public class DoctorCollectionDataResolver : IDoctorCollectionDataResolver
     {
         public string RequestProcess(string clinicId, string specialitiId)
         {

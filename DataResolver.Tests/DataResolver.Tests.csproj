@@ -62,6 +62,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataResolverTestModule.cs" />
     <Compile Include="TicketCollectionDataResolverTests.cs" />
     <Compile Include="DoctorCollectionDataResolverTests.cs" />
     <Compile Include="SpecialityCollectionDataResolverTests.cs" />
@@ -78,6 +79,10 @@
     <ProjectReference Include="..\DataResolver\DataResolver.csproj">
       <Project>{c7a4e98d-8b8b-4a12-80f5-f26a6bf509bf}</Project>
       <Name>DataResolver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Interfaces\Interfaces.csproj">
+      <Project>{ebd4f758-4880-4e76-b466-6ba46b46f14d}</Project>
+      <Name>Interfaces</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

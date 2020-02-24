@@ -1,13 +1,16 @@
-﻿using CheckClinic.Model;
+﻿using CheckClinic.Interfaces;
+using CheckClinic.Model;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CheckClinic.DataParser
 {
-    public class ClinicCollectionParser
+    public class ClinicCollectionParser : IClinicCollectionParser
     {
-        public ClinicCollection ParseClinics(string content)
+        public IList<IClinic> ParseClinics(string content)
         {
-            return JsonConvert.DeserializeObject<ClinicCollection>(content);
+            return JsonConvert.DeserializeObject<ClinicCollection>(content).ClinicModels.Cast<IClinic>().ToList();
         }
     }
 }

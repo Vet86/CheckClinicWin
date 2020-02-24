@@ -1,8 +1,9 @@
-﻿using RestSharp;
+﻿using CheckClinic.Interfaces;
+using RestSharp;
 
 namespace CheckClinicDataResolver
 {
-    public class ClinicCollectionDataResolver
+    public class ClinicCollectionDataResolver : IClinicCollectionDataResolver
     {
         public string RequestProcess(string districtId)
         {
@@ -12,7 +13,6 @@ namespace CheckClinicDataResolver
             request.AddHeader("Host", "www.gorzdrav.spb.ru");
             request.AddHeader("X-Requested-With", "XMLHttpRequest");
             request.AddParameter("district_form-district_id", districtId, ParameterType.GetOrPost);
-
 
             IRestResponse response = client.Execute(request);
             return response.Content;

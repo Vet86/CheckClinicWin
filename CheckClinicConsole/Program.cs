@@ -33,6 +33,12 @@ namespace CheckClinic.Console
                 }
             }
             
+            if (argsParser.Generate)
+            {
+                var cacheGenerator = ContainerHolder.Container.Resolve<ICacheGenerator>();
+                cacheGenerator.Process();
+                return;
+            }
             var detector = ContainerHolder.Container.Resolve<IDetector>();
             foreach(var receiver in argsParser.GetMailReceivers())
             {

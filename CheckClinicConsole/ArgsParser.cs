@@ -22,6 +22,9 @@ namespace CheckClinic.Console
         [ValueArgument(typeof(string), 'm', "mail", Description = "Mail receivers. Separate with ;", Optional = false)]
         public string MailReceiver;
 
+        [ValueArgument(typeof(bool), 'g', "generate", Description = "Generate", Optional = true)]
+        public bool Generate;
+
         public bool IsValid()
         {
             if (string.IsNullOrWhiteSpace(DoctorId) || 

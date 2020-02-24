@@ -13,8 +13,8 @@ namespace Complex.Tests
         public void RequestDoctorsTest()
         {
             var doctorCollectionJson = new DoctorCollectionDataResolver().RequestProcess("591", "2");
-            var doctorCollectionModel = new DoctorCollectionParser().Parse(doctorCollectionJson);
-            Assert.AreEqual(1, doctorCollectionModel.Doctors.Count);
+            var doctorCollectionModel = new DoctorCollectionParser().ParseDoctors(doctorCollectionJson);
+            Assert.AreEqual(1, doctorCollectionModel.Count);
         }
     }
 }

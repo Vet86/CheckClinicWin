@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailSender", "MailSender\Ma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interfaces", "Interfaces\Interfaces.csproj", "{EBD4F758-4880-4E76-B466-6BA46B46F14D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheGenerator", "CacheGenerator\CacheGenerator.csproj", "{1002522A-F1BE-4E4B-9072-0FDD9EF4D5C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{EBD4F758-4880-4E76-B466-6BA46B46F14D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBD4F758-4880-4E76-B466-6BA46B46F14D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBD4F758-4880-4E76-B466-6BA46B46F14D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1002522A-F1BE-4E4B-9072-0FDD9EF4D5C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1002522A-F1BE-4E4B-9072-0FDD9EF4D5C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1002522A-F1BE-4E4B-9072-0FDD9EF4D5C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1002522A-F1BE-4E4B-9072-0FDD9EF4D5C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
