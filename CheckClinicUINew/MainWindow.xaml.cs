@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using CheckClinic.Interfaces;
+using CheckClinic.UI;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace CheckClinicUINew
 {
@@ -7,6 +10,13 @@ namespace CheckClinicUINew
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainVM();
+        }
+
+        private void onNotifyButton(object sender, RoutedEventArgs e)
+        {
+            var doctor = (IDoctor)((Button)sender).DataContext;
+            ((MainVM)DataContext).AddOservable(doctor);
         }
     }
 }
