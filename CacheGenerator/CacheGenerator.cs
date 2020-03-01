@@ -25,6 +25,13 @@ namespace CheckClinic.CacheGenerator
         private List<Task> _specTasks = new List<Task>();
         private List<Task> _clinicTasks = new List<Task>();
         private List<Task> _districtsTasks = new List<Task>();
+        class SpecInfo
+        {
+            public string SpecialitiesFolder;
+            public string ClinicId;
+            public string SpecialityId;
+        }
+        private List<SpecInfo> _specs = new List<SpecInfo>();
 
         public CacheGenerator(
             IDistrictCollectionDataResolver districtCollectionDataResolver, 
@@ -62,6 +69,7 @@ namespace CheckClinic.CacheGenerator
             _specTasks.Clear();
             _clinicTasks.Clear();
             _districtsTasks.Clear();
+            _specs.Clear();
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
@@ -83,10 +91,20 @@ namespace CheckClinic.CacheGenerator
                     break;
             }
 
+            foreach(var s in _specs)
+            {
+                _specTasks.Add(parseSpeciality(s.SpecialitiesFolder, s.ClinicId, s.SpecialityId));
+            }
+
+            //Parallel.ForEach(_specs, (s) =>
+            //{
+            //    parseSpeciality(s.SpecialitiesFolder, s.ClinicId, s.SpecialityId);
+            //});
+
             //Task.WhenAll(_districtsTasks).GetAwaiter().GetResult();
             //Task.WhenAll(_clinicTasks).GetAwaiter().GetResult();
-            //Task.WhenAll(_specTasks).GetAwaiter().GetResult();
-            
+            Task.WhenAll(_specTasks).GetAwaiter().GetResult();
+
             stopwatch.Stop();
             Console.WriteLine("Потрачено тактов на выполнение: " + stopwatch.ElapsedTicks);
         }
@@ -146,31 +164,37 @@ namespace CheckClinic.CacheGenerator
                 //List<Task> tasks = new List<Task>();
                 int i = 0;
 
-                _specTasks.Clear();
+                //_specTasks.Clear();
                 foreach (ISpeciality speciality in specialities)
                 {
                     i++;
-                    _specTasks.Add(parseSpeciality(specialitiesFolder, clinicId, speciality));
+                    _specs.Add(new SpecInfo()
+                    {
+                        SpecialitiesFolder = specialitiesFolder,
+                        ClinicId = clinicId,
+                        SpecialityId = speciality.Id
+                    });
+                    //_specTasks.Add(parseSpeciality(specialitiesFolder, clinicId, speciality.Id));
                     //parseSpeciality(specialitiesFolder, clinicId, speciality).GetAwaiter().GetResult();
                     if (i == 5)
                         break;
                 }
-                Task.WhenAll(_specTasks).GetAwaiter().GetResult();
+                //Task.WhenAll(_specTasks).GetAwaiter().GetResult();
             }//);
         }
 
-        public async Task parseSpeciality(string specialitiesFolder, string clinicId, ISpeciality speciality)
+        public async Task parseSpeciality(string specialitiesFolder, string clinicId, string specialityId)
         {
-            writeLog(speciality.Id, "1");
+            writeLog(specialityId, "1");
             string content = string.Empty;
-            await Task.Run(() =>
+            //await Task.Run(() =>
             {
-                writeLog(speciality.Id, "2");
-                content = _doctorCollectionDataResolver.RequestProcess(clinicId, speciality.Id);
-                writeLog(speciality.Id, "3");
+                writeLog(specialityId, "2");
+                content = _doctorCollectionDataResolver.RequestProcess(clinicId, specialityId);
+                writeLog(specialityId, "3");
 
-                writeLog(speciality.Id, "4");
-                string correctSpecId = speciality.Id.Replace("/", "").Replace("\\", "");
+                writeLog(specialityId, "4");
+                string correctSpecId = specialityId.Replace("/", "").Replace("\\", "");
 
                 string specialityFolder = $"{specialitiesFolder}/{correctSpecId}_{clinicId}";
                 if (!Directory.Exists(specialityFolder))
@@ -184,7 +208,7 @@ namespace CheckClinic.CacheGenerator
                     return;
                 }
                 File.WriteAllText(specialityFileName, content);
-                writeLog(speciality.Id, "5");
+                writeLog(specialityId, "5");
 
                 //if (!Directory.Exists("Cache/Doctors"))
                 //    Directory.CreateDirectory("Cache/Doctors");
@@ -195,7 +219,7 @@ namespace CheckClinic.CacheGenerator
                 //    parseDoctor(doctor);
                 //}
 
-            });
+            }//);
             }
 
         public void parseDoctor(IDoctor doctor)
