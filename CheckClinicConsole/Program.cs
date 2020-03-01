@@ -50,7 +50,7 @@ namespace CheckClinic.Console
             var clinicIds = argsParser.GetClinicIds();
             for(int i = 0; i < doctorIds.Length; ++i)
             {
-                detector.Add(new ObserveData(clinicIds[i], doctorIds[i]), doctorNames?[i]);
+                detector.Add(new ObserveData(clinicIds[i], doctorIds[i], doctorNames?[i]));
             }
 
             System.Console.ReadKey();

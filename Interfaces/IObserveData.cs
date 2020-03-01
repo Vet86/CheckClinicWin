@@ -4,5 +4,6 @@
     {
         string ClinicId { get; }
         string DoctorId { get; }
+        string DoctorName { get; }
     }
 }

@@ -12,7 +12,6 @@ namespace CheckClinic.Detector
         private IDataRequest _dataRequest;
         private IMailNotifier _mailNotifier;
         private Dictionary<IObserveData, IReadOnlyList<ITicket>> _data = new Dictionary<IObserveData, IReadOnlyList<ITicket>>(new ObserveDataComparer());
-        private Dictionary<IObserveData, string> _observeDataToDoctor = new Dictionary<IObserveData, string>(new ObserveDataComparer());
         
         public Detector()
         {
@@ -22,7 +21,7 @@ namespace CheckClinic.Detector
             _dataRequest.SetInterval(TimeSpan.FromMinutes(5));
         }
 
-        public void Add(IObserveData observeData, string doctorName = null)
+        public void Add(IObserveData observeData)
         {
             if (_data.ContainsKey(observeData))
                 return;
@@ -30,12 +29,11 @@ namespace CheckClinic.Detector
             _dataRequest.Add(observeData);
             var tickets = _dataRequest.Receive(observeData);
             _data.Add(observeData, tickets);
-            string doctorText = doctorName ?? observeData.DoctorId;
+            string doctorText = observeData.DoctorName ?? observeData.DoctorId;
             System.Console.WriteLine($"{doctorText} has {tickets.Count()} tickets");
-            _observeDataToDoctor.Add(observeData, doctorName);
         }
 
-        public void Add(IObserveData observeData, DateTime dateTime, string doctorName = null)
+        public void Add(IObserveData observeData, DateTime dateTime)
         {
             throw new NotImplementedException();
         }
@@ -46,7 +44,6 @@ namespace CheckClinic.Detector
             {
                 _data.Remove(observeData);
                 _dataRequest.Remove(observeData);
-                _observeDataToDoctor.Remove(observeData);
             }
         }
 
@@ -54,12 +51,12 @@ namespace CheckClinic.Detector
         {
             try
             {
-                File.AppendAllText($"log{DateTime.Now.ToShortDateString()}.txt", $"{DateTime.Now.ToString()}: {_observeDataToDoctor[observeData]} has {newTickets.Count} tickets\n");
+                File.AppendAllText($"log{DateTime.Now.ToShortDateString()}.txt", $"{DateTime.Now.ToString()}: {observeData.DoctorName} has {newTickets.Count} tickets\n");
                 var cacheTickets = _data[observeData];
                 var newAddedTickets = findNewTickets(cacheTickets, newTickets);
                 if (cacheTickets.Count != newTickets.Count)
                 {
-                    System.Console.WriteLine($"{_observeDataToDoctor[observeData]} has {newTickets.Count} tickets");
+                    System.Console.WriteLine($"{observeData.DoctorName} has {newTickets.Count} tickets");
                 }
                 if (newAddedTickets.Any())
                 {
@@ -77,9 +74,9 @@ namespace CheckClinic.Detector
         {
             foreach(var ticket in newTickets)
             {
-                System.Console.WriteLine($"{_observeDataToDoctor[observeData]} add new {ticket.Id} ticket");
+                System.Console.WriteLine($"{observeData.DoctorName} add new {ticket.Id} ticket");
             }
-            var mailTextPreparer = new MailTextPreparer(observeData, newTickets.ToList(), _observeDataToDoctor[observeData]);
+            var mailTextPreparer = new MailTextPreparer(observeData, newTickets.ToList(), observeData.DoctorName);
             _mailNotifier.Send(mailTextPreparer.Title, mailTextPreparer.Content);
         }
 
