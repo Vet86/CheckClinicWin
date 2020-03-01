@@ -5,7 +5,7 @@ namespace CheckClinic.Model
 {
     public class Clinic : IClinic
     {
-        [JsonProperty("Id")]
+        [JsonProperty("IdLPU")]
         public string Id { get; set; }
 
         [JsonProperty("LPUFullName")]
