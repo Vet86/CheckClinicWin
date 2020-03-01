@@ -1,5 +1,10 @@
 ﻿using CheckClinic.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CheckClinic.CacheGenerator
 {
@@ -16,6 +21,10 @@ namespace CheckClinic.CacheGenerator
 
         private readonly IDoctorCollectionDataResolver _doctorCollectionDataResolver;
         private readonly IDoctorCollectionParser _doctorCollectionParser;
+
+        private List<Task> _specTasks = new List<Task>();
+        private List<Task> _clinicTasks = new List<Task>();
+        private List<Task> _districtsTasks = new List<Task>();
 
         public CacheGenerator(
             IDistrictCollectionDataResolver districtCollectionDataResolver, 
@@ -43,79 +52,151 @@ namespace CheckClinic.CacheGenerator
 
         public void Process()
         {
+            var folder = "Cache";
             if (Directory.Exists("Cache"))
                 Directory.Delete("Cache", true);
 
             if (!Directory.Exists("Cache"))
                 Directory.CreateDirectory("Cache");
 
+            _specTasks.Clear();
+            _clinicTasks.Clear();
+            _districtsTasks.Clear();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             string content = _districtCollectionDataResolver.RequestProcess();
-            File.WriteAllText("Cache/Districts.html", content);
+            File.WriteAllText($"{folder}/Districts.html", content);
             var districts = _districtCollectionParser.ParseDistricts(content);
-            if (!Directory.Exists("Cache/Districts"))
-                Directory.CreateDirectory("Cache/Districts");
+            var districtsFolder = $"{folder}/Districts";
+            if (!Directory.Exists(districtsFolder))
+                Directory.CreateDirectory(districtsFolder);
+            int i = 0;
             foreach (IDistrict district in districts)
             {
-                parseDistrict(district);
+                i++;
+                System.Console.WriteLine($"_________District {district.Name} {i}/{districts.Count} _________");
+                //_districtsTasks.Add( parseDistrict(districtsFolder, district.Id) );
+                parseDistrict(districtsFolder, district.Id).GetAwaiter().GetResult();
+
+                if (i == 2)
+                    break;
             }
+
+            //Task.WhenAll(_districtsTasks).GetAwaiter().GetResult();
+            //Task.WhenAll(_clinicTasks).GetAwaiter().GetResult();
+            //Task.WhenAll(_specTasks).GetAwaiter().GetResult();
+            
+            stopwatch.Stop();
+            Console.WriteLine("Потрачено тактов на выполнение: " + stopwatch.ElapsedTicks);
         }
 
-        public void parseDistrict(IDistrict district)
+        public async Task parseDistrict(string districtsFolder, string districtId)
         {
-            string content = _clinicCollectionDataResolver.RequestProcess(district.Id);
-            File.WriteAllText($"Cache/Districts/{district.Id}.json", content);
-
-            if (!Directory.Exists("Cache/Clinics"))
-                Directory.CreateDirectory("Cache/Clinics");
-
-            var clinics = _clinicCollectionParser.ParseClinics(content);
-            foreach (IClinic clinic in clinics)
+            //if (districtId != "12")
+            //return;
+            //await Task.Run(() =>
             {
-                parseClinic(clinic);                
-            }
+                string content = _clinicCollectionDataResolver.RequestProcess(districtId);
+
+                string districtFolder = $"{districtsFolder}/{districtId}";
+                File.WriteAllText($"{districtFolder}.json", content);
+
+                string clinicsFolder = $"{districtFolder}/Clinics";
+                if (!Directory.Exists(clinicsFolder))
+                    Directory.CreateDirectory(clinicsFolder);
+
+                var clinics = _clinicCollectionParser.ParseClinics(content);
+                int i = 0;
+                foreach (IClinic clinic in clinics)
+                {
+                    i++;
+                    System.Console.WriteLine($"Clinic {i}/{clinics.Count}");
+                    //_clinicTasks.Add(parseClinic(clinicsFolder, clinic.Id));
+                    parseClinic(clinicsFolder, clinic.Id).GetAwaiter().GetResult();
+                    if (i == 10)
+                        break;
+                }
+            }//);
         }
 
-        public void parseClinic(IClinic clinic)
+        public async Task parseClinic(string clinicsFolder, string clinicId)
         {
-            string content = _specialityCollectionDataResolver.RequestProcess(clinic.Id);
-            string clinicFileName = $"Cache/Clinics/{clinic.Id}.json";
-            if (File.Exists(clinicFileName))
-            {
-                System.Diagnostics.Trace.WriteLine($"{clinicFileName} is exists");
-                return;
-            }
-            File.WriteAllText(clinicFileName, content);
+            //if (clinicId != "255")
+            //return;
 
-            if (!Directory.Exists("Cache/Specialities"))
-                Directory.CreateDirectory("Cache/Specialities");
-
-            var specialities = _specialityCollectionParser.ParseSpecialities(content);
-            foreach (ISpeciality speciality in specialities)
+            //await Task.Run(() =>
             {
-                parseSpeciality(clinic.Id, speciality);
-            }
+                string content = _specialityCollectionDataResolver.RequestProcess(clinicId);
+
+                string clinicFilder = $"{clinicsFolder}/{clinicId}";
+                string clinicFileName = $"{clinicFilder}.json";
+                if (File.Exists(clinicFileName))
+                {
+                    System.Diagnostics.Trace.WriteLine($"{clinicFileName} is exists");
+                    return;
+                }
+                File.WriteAllText(clinicFileName, content);
+
+                string specialitiesFolder = $"{clinicFilder}/Specialities";
+                if (!Directory.Exists(specialitiesFolder))
+                    Directory.CreateDirectory(specialitiesFolder);
+
+                var specialities = _specialityCollectionParser.ParseSpecialities(content);
+                //List<Task> tasks = new List<Task>();
+                int i = 0;
+
+                _specTasks.Clear();
+                foreach (ISpeciality speciality in specialities)
+                {
+                    i++;
+                    _specTasks.Add(parseSpeciality(specialitiesFolder, clinicId, speciality));
+                    //parseSpeciality(specialitiesFolder, clinicId, speciality).GetAwaiter().GetResult();
+                    if (i == 5)
+                        break;
+                }
+                Task.WhenAll(_specTasks).GetAwaiter().GetResult();
+            }//);
         }
 
-        public void parseSpeciality(string clinicId, ISpeciality speciality)
+        public async Task parseSpeciality(string specialitiesFolder, string clinicId, ISpeciality speciality)
         {
-            string content = _doctorCollectionDataResolver.RequestProcess(clinicId, speciality.Id);
-            string specialityFileName = $"Cache/Specialities/{clinicId}_{speciality.Id.Replace("/", "").Replace("\\", "")}.json";
-            if (File.Exists(specialityFileName))
+            writeLog(speciality.Id, "1");
+            string content = string.Empty;
+            await Task.Run(() =>
             {
-                System.Diagnostics.Trace.WriteLine($"{specialityFileName} is exists");
-                return;
+                writeLog(speciality.Id, "2");
+                content = _doctorCollectionDataResolver.RequestProcess(clinicId, speciality.Id);
+                writeLog(speciality.Id, "3");
+
+                writeLog(speciality.Id, "4");
+                string correctSpecId = speciality.Id.Replace("/", "").Replace("\\", "");
+
+                string specialityFolder = $"{specialitiesFolder}/{correctSpecId}_{clinicId}";
+                if (!Directory.Exists(specialityFolder))
+                    Directory.CreateDirectory(specialityFolder);
+
+
+                string specialityFileName = $"{specialityFolder}.json";
+                if (File.Exists(specialityFileName))
+                {
+                    System.Diagnostics.Trace.WriteLine($"{specialityFileName} is exists");
+                    return;
+                }
+                File.WriteAllText(specialityFileName, content);
+                writeLog(speciality.Id, "5");
+
+                //if (!Directory.Exists("Cache/Doctors"))
+                //    Directory.CreateDirectory("Cache/Doctors");
+
+                //var doctors = _doctorCollectionParser.ParseDoctors(content);
+                //foreach (IDoctor doctor in doctors)
+                //{
+                //    parseDoctor(doctor);
+                //}
+
+            });
             }
-            File.WriteAllText(specialityFileName, content);
-
-            //if (!Directory.Exists("Cache/Doctors"))
-            //    Directory.CreateDirectory("Cache/Doctors");
-
-            //var doctors = _doctorCollectionParser.ParseDoctors(content);
-            //foreach (IDoctor doctor in doctors)
-            //{
-            //    parseDoctor(doctor);
-            //}
-        }
 
         public void parseDoctor(IDoctor doctor)
         {
@@ -127,6 +208,13 @@ namespace CheckClinic.CacheGenerator
             //    return;
             //}
             //File.WriteAllText(specialityFileName, content);
+        }
+
+        private void writeLog(string tag1, string tag2)
+        {
+            var text = $"{DateTime.Now.TimeOfDay.ToString()} {tag1} {tag2}. Thread {Thread.CurrentThread.ManagedThreadId}" + "\n";
+            System.Console.WriteLine(text);
+            //File.AppendAllText("l.txt", text);
         }
     }
 }
