@@ -7,10 +7,10 @@ using System.Collections.ObjectModel;
 
 namespace CheckClinic.UI
 {
-    class MainVM : ViewModelBase
+    class MainVM : ViewModelBase, IDetectListener
     {
+        #region private fields 
         private readonly IDistrictCollectionDataResolver _districtCollectionDataResolver = ContainerHolder.Container.Resolve<IDistrictCollectionDataResolver>();
-
         private readonly IDistrictCollectionParser _districtCollectionParser = ContainerHolder.Container.Resolve<IDistrictCollectionParser>();
 
         private readonly IClinicCollectionDataResolver _clinicCollectionDataResolver = ContainerHolder.Container.Resolve<IClinicCollectionDataResolver>();
@@ -25,6 +25,7 @@ namespace CheckClinic.UI
         private readonly ITicketCollectionDataResolver _ticketCollectionDataResolver = ContainerHolder.Container.Resolve<ITicketCollectionDataResolver>();
         private readonly ITicketCollectionParser _ticketCollectionParser = ContainerHolder.Container.Resolve<ITicketCollectionParser>();
 
+        private readonly IDetector _detector = ContainerHolder.Container.Resolve<IDetector>();
         private IDistrict _selectDistrict;
         private IClinic _selectClinic;
         private ISpeciality _selectSpeciality;
@@ -36,12 +37,15 @@ namespace CheckClinic.UI
         private bool _isSpecialitiesExpanded;
         private bool _isDoctorsExpanded;
         private bool _isTicketsExpanded;
+        #endregion
 
         public MainVM()
         {
+            _detector.AddListener(this);
             string content = _districtCollectionDataResolver.RequestProcess();
             Districts = _districtCollectionParser.ParseDistricts(content);
             IsDistrictsExpanded = true;
+            refreshObserves();
         }
 
         public IList<IDistrict> Districts { get; set; }
@@ -170,7 +174,7 @@ namespace CheckClinic.UI
             }
         }
 
-        public ObservableCollection<IObserveData> ObserveData { get; } = new ObservableCollection<IObserveData>();
+        public IReadOnlyList<IObserveData> ObserveData { get; private set; }
 
         public bool IsDistrictsExpanded
         {
@@ -287,10 +291,28 @@ namespace CheckClinic.UI
             }
         }
 
+        public void NewTicketsAdded(IObserveData observeData, IEnumerable<ITicket> newTickets)
+        {
+            
+        }
+
         internal void AddOservable(IDoctor doctor)
         {
             var observeData = new ObserveData(_selectClinic.Id, doctor.Id, doctor.DoctorName);
-            ObserveData.Add(observeData);
+            _detector.Add(observeData);
+            refreshObserves();
+        }
+
+        private void refreshObserves()
+        {
+            ObserveData = _detector.GetObserves();
+            FirePropertyChange(nameof(ObserveData));
+        }
+
+        private IReadOnlyList<ITicket> GetTickets(string clinicId, string doctorId)
+        {
+            string content = _ticketCollectionDataResolver.RequestProcess(clinicId, doctorId);
+            return _ticketCollectionParser.Parse(content);
         }
     }
 }

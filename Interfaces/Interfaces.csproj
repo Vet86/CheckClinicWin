@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="IClinic.cs" />
     <Compile Include="IClinicCollectionDataResolver.cs" />
+    <Compile Include="IDetectListener.cs" />
     <Compile Include="IDoctorCollectionParser.cs" />
     <Compile Include="ISpecialityCollectionParser.cs" />
     <Compile Include="IClinicCollectionParser.cs" />

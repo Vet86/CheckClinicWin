@@ -42,7 +42,7 @@ namespace CheckClinic.Console
             var detector = ContainerHolder.Container.Resolve<IDetector>();
             foreach(var receiver in argsParser.GetMailReceivers())
             {
-                detector.AddMailReceiver(receiver);
+                detector.AddMailReceiver(new System.Net.Mail.MailAddress(receiver));
             }
 
             var doctorNames = argsParser.GetDoctorNames();

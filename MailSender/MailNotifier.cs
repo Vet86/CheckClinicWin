@@ -8,19 +8,19 @@ namespace CheckClinic.MailNotifier
     public class MailNotifier : IMailNotifier
     {
         private readonly IMailSettings _mailSettings;
-        private List<string> _receivers = new List<string>();
+        private List<MailAddress> _receivers = new List<MailAddress>();
 
         public MailNotifier(IMailSettings mailSettings)
         {
             _mailSettings = mailSettings;
         }
 
-        public void AddReceiver(string receiver)
+        public void AddReceiver(MailAddress receiver)
         {
             _receivers.Add(receiver);
         }
 
-        public void AddReceivers(IEnumerable<string> receivers)
+        public void AddReceivers(IEnumerable<MailAddress> receivers)
         {
             _receivers.AddRange(receivers);
         }
@@ -28,6 +28,11 @@ namespace CheckClinic.MailNotifier
         public void ClearAllReceivers()
         {
             _receivers.Clear();
+        }
+
+        public IReadOnlyList<MailAddress> GetReceivers()
+        {
+            return _receivers;
         }
 
         public void Send(string title, string content)
