@@ -14,7 +14,7 @@ namespace CheckClinic.Detector
             var stringBuilder = new StringBuilder();
             foreach(var ticket in newTickets)
             {
-                stringBuilder.AppendLine(ticket.Id);
+                stringBuilder.AppendLine(ticket.Time);
             }
             Content = stringBuilder.ToString();
         }
