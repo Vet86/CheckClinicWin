@@ -31,10 +31,17 @@ namespace CheckClinic.UI
         private IDoctor _selectDoctor;
         private ITicket _selectTicket;
 
+        private bool _isDistrictsExpanded;
+        private bool _isClinicsExpanded;
+        private bool _isSpecialitiesExpanded;
+        private bool _isDoctorsExpanded;
+        private bool _isTicketsExpanded;
+
         public MainVM()
         {
             string content = _districtCollectionDataResolver.RequestProcess();
             Districts = _districtCollectionParser.ParseDistricts(content);
+            IsDistrictsExpanded = true;
         }
 
         public IList<IDistrict> Districts { get; set; }
@@ -55,6 +62,7 @@ namespace CheckClinic.UI
                 string content = _clinicCollectionDataResolver.RequestProcess(_selectDistrict.Id);
                 Clinics = _clinicCollectionParser.ParseClinics(content);
                 FirePropertyChange(nameof(Clinics));
+                IsClinicsExpanded = true;
             }
         }
 
@@ -77,6 +85,7 @@ namespace CheckClinic.UI
                 {
                     string content = _specialityCollectionDataResolver.RequestProcess(_selectClinic.Id);
                     Specialities = _specialityCollectionParser.ParseSpecialities(content);
+                    IsSpecialitiesExpanded = true;
                 }
                 else
                 {
@@ -105,6 +114,7 @@ namespace CheckClinic.UI
                 {
                     string content = _doctorCollectionDataResolver.RequestProcess(_selectClinic.Id, _selectSpeciality.Id);
                     Doctors = _doctorCollectionParser.ParseDoctors(content);
+                    IsDoctorsExpanded = true;
                 }
                 else
                 {
@@ -133,6 +143,7 @@ namespace CheckClinic.UI
                 {
                     string content = _ticketCollectionDataResolver.RequestProcess(_selectClinic.Id, _selectDoctor.Id);
                     Tickets = _ticketCollectionParser.Parse(content);
+                    IsTicketsExpanded = true;
                 }
                 else
                 {
@@ -160,6 +171,121 @@ namespace CheckClinic.UI
         }
 
         public ObservableCollection<IObserveData> ObserveData { get; } = new ObservableCollection<IObserveData>();
+
+        public bool IsDistrictsExpanded
+        {
+            get
+            {
+                return _isDistrictsExpanded;
+            }
+            set
+            {
+                if (_isDistrictsExpanded == value)
+                    return;
+
+                _isDistrictsExpanded = value;
+                FirePropertyChange(nameof(IsDistrictsExpanded));
+                if (_isDistrictsExpanded)
+                {
+                    IsClinicsExpanded = false;
+                    IsSpecialitiesExpanded = false;
+                    IsDoctorsExpanded = false;
+                    IsTicketsExpanded = false;
+                }
+            }
+        }
+
+        public bool IsClinicsExpanded
+        {
+            get
+            {
+                return _isClinicsExpanded;
+            }
+            set
+            {
+                if (_isClinicsExpanded == value)
+                    return;
+
+                _isClinicsExpanded = value;
+                FirePropertyChange(nameof(IsClinicsExpanded));
+                if (_isClinicsExpanded)
+                {
+                    IsDistrictsExpanded = false;
+                    IsSpecialitiesExpanded = false;
+                    IsDoctorsExpanded = false;
+                    IsTicketsExpanded = false;
+                }
+            }
+        }
+
+        public bool IsSpecialitiesExpanded
+        {
+            get
+            {
+                return _isSpecialitiesExpanded;
+            }
+            set
+            {
+                if (_isSpecialitiesExpanded == value)
+                    return;
+
+                _isSpecialitiesExpanded = value;
+                FirePropertyChange(nameof(IsSpecialitiesExpanded));
+                if (_isSpecialitiesExpanded)
+                {
+                    IsDistrictsExpanded = false;
+                    IsClinicsExpanded = false;
+                    IsDoctorsExpanded = false;
+                    IsTicketsExpanded = false;
+                }
+            }
+        }
+
+        public bool IsDoctorsExpanded
+        {
+            get
+            {
+                return _isDoctorsExpanded;
+            }
+            set
+            {
+                if (_isDoctorsExpanded == value)
+                    return;
+
+                _isDoctorsExpanded = value;
+                FirePropertyChange(nameof(IsDoctorsExpanded));
+                if (_isDoctorsExpanded)
+                {
+                    IsDistrictsExpanded = false;
+                    IsClinicsExpanded = false;
+                    IsSpecialitiesExpanded = false;
+                    IsTicketsExpanded = false;
+                }
+            }
+        }
+
+        public bool IsTicketsExpanded
+        {
+            get
+            {
+                return _isTicketsExpanded;
+            }
+            set
+            {
+                if (_isTicketsExpanded == value)
+                    return;
+
+                _isTicketsExpanded = value;
+                FirePropertyChange(nameof(IsTicketsExpanded));
+                if (_isTicketsExpanded)
+                {
+                    IsDistrictsExpanded = false;
+                    IsClinicsExpanded = false;
+                    IsSpecialitiesExpanded = false;
+                    IsDoctorsExpanded = false;
+                }
+            }
+        }
 
         internal void AddOservable(IDoctor doctor)
         {

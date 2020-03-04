@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CheckClinicUINew"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="550" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -13,30 +13,60 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <ListBox Grid.Column="0" ItemsSource="{Binding Districts}" DisplayMemberPath="Name" SelectedItem="{Binding SelectDistrict}"/>
-            <ListBox Grid.Column="1" ItemsSource="{Binding Clinics}" DisplayMemberPath="FullName" SelectedItem="{Binding SelectClinic}"/>
-            <ListBox Grid.Column="2" ItemsSource="{Binding Specialities}" DisplayMemberPath="DoctorName" SelectedItem="{Binding SelectSpeciality}"/>
-            <ListBox Grid.Column="3" ItemsSource="{Binding Doctors}" SelectedItem="{Binding SelectDoctor}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding DoctorName}"/>
-                            <Button Width="14" Height="14" Click="onNotifyButton">
-                                <Image Source="Resources\bell.png">
-                                </Image>
-                            </Button>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <ListBox Grid.Column="4" ItemsSource="{Binding Tickets}" DisplayMemberPath="Id" SelectedItem="{Binding SelectTicket}"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Expander Grid.Row="0" IsExpanded="{Binding IsDistrictsExpanded}">
+                <Expander.Header>
+                    <Run Text="{Binding SelectDistrict.Name, StringFormat='Район - {0}', Mode=OneWay, FallbackValue='Район не выбран'}" />
+                </Expander.Header>
+                <ListBox ItemsSource="{Binding Districts}" DisplayMemberPath="Name" SelectedItem="{Binding SelectDistrict}"/>
+            </Expander>
+
+            <Expander Grid.Row="1" IsExpanded="{Binding IsClinicsExpanded}">
+                <Expander.Header>
+                    <Run Text="{Binding SelectClinic.FullName, StringFormat='Клиника - {0}', Mode=OneWay, FallbackValue='Клиника не выбрана'}" />
+                </Expander.Header>
+                <ListBox ItemsSource="{Binding Clinics}" DisplayMemberPath="FullName" SelectedItem="{Binding SelectClinic}"/>
+            </Expander>
+
+            <Expander Grid.Row="2" IsExpanded="{Binding IsSpecialitiesExpanded}">
+                <Expander.Header>
+                    <Run Text="{Binding SelectSpeciality.DoctorName, StringFormat='Специализация - {0}', Mode=OneWay, FallbackValue='Специализация не выбрана'}" />
+                </Expander.Header>
+                <ListBox ItemsSource="{Binding Specialities}" DisplayMemberPath="DoctorName" SelectedItem="{Binding SelectSpeciality}"/>
+            </Expander>
+
+            <Expander Grid.Row="3" IsExpanded="{Binding IsDoctorsExpanded}">
+                <Expander.Header>
+                    <Run Text="{Binding SelectDoctor.DoctorName, StringFormat='Доктор - {0}', Mode=OneWay, FallbackValue='Доктор не выбран'}" />
+                </Expander.Header>
+                <ListBox ItemsSource="{Binding Doctors}" SelectedItem="{Binding SelectDoctor}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding DoctorName}"/>
+                                <Button Width="14" Height="14" Click="onNotifyButton">
+                                    <Image Source="Resources\add.jpg">
+                                    </Image>
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Expander>
+
+            <Expander Grid.Row="4" IsExpanded="{Binding IsTicketsExpanded}">
+                <Expander.Header>
+                    <Run Text="{Binding SelectTicket.DateStart.Iso, StringFormat='Номерок - {0}', Mode=OneWay, FallbackValue='Номерок не выбран'}" />
+                </Expander.Header>
+                <ListBox ItemsSource="{Binding Tickets}" DisplayMemberPath="DateStart.Iso" SelectedItem="{Binding SelectTicket}"/>
+            </Expander>
+            
         </Grid>
         <Grid Grid.Row="2">
             <ListBox ItemsSource="{Binding ObserveData}" DisplayMemberPath="DoctorName"/>

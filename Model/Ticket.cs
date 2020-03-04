@@ -12,6 +12,8 @@ namespace CheckClinic.Model
         [JsonProperty("date_start")]
         public DateTicket DateStart { get; set; }
 
+        public string Time => DateStart.Iso;
+
         public bool Equals(Ticket x, Ticket y)
         {
             return string.Equals(x.Id, y.Id);
