@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net.Mail;
 
 namespace CheckClinic.Interfaces
 {
@@ -7,6 +9,11 @@ namespace CheckClinic.Interfaces
         void Add(IObserveData observeData);
         void Add(IObserveData observeData, DateTime dateTime);
         void Remove(IObserveData observeData);
-        void AddMailReceiver(string mailReceiver);
+        IReadOnlyList<IObserveData> GetObserves();
+
+        void AddMailReceiver(MailAddress mailReceiver);
+        IReadOnlyList<MailAddress> GetMailReceivers();
+
+        void AddListener(IDetectListener detectListener);
     }
 }

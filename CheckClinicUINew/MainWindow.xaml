@@ -10,7 +10,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" MinHeight="100"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
@@ -69,7 +69,14 @@
             
         </Grid>
         <Grid Grid.Row="2">
-            <ListBox ItemsSource="{Binding ObserveData}" DisplayMemberPath="DoctorName"/>
+            <ListView Margin="10" ItemsSource="{Binding ObserveData}" >
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Doctor" Width="120" DisplayMemberBinding="{Binding DoctorName}" />
+                        <GridViewColumn Header="Tickets" Width="50" DisplayMemberBinding="{Binding Age}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
         </Grid>
     </Grid>
 </Window>

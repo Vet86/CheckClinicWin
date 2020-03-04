@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 
 namespace CheckClinic.Detector
 {
@@ -12,13 +13,19 @@ namespace CheckClinic.Detector
         private IDataRequest _dataRequest;
         private IMailNotifier _mailNotifier;
         private Dictionary<IObserveData, IReadOnlyList<ITicket>> _data = new Dictionary<IObserveData, IReadOnlyList<ITicket>>(new ObserveDataComparer());
-        
+        private List<IDetectListener> _listeners = new List<IDetectListener>();
+
         public Detector()
         {
             _dataRequest = ContainerHolder.Container.Resolve<IDataRequest>();
             _mailNotifier = ContainerHolder.Container.Resolve<IMailNotifier>();
             _dataRequest.NewDataReceived += onNewDataReceived;
             _dataRequest.SetInterval(TimeSpan.FromMinutes(5));
+        }
+
+        public IReadOnlyList<IObserveData> GetObserves()
+        {
+            return _data.Keys.ToList();
         }
 
         public void Add(IObserveData observeData)
@@ -76,8 +83,15 @@ namespace CheckClinic.Detector
             {
                 System.Console.WriteLine($"{observeData.DoctorName} add new {ticket.Id} ticket");
             }
-            var mailTextPreparer = new MailTextPreparer(observeData, newTickets.ToList(), observeData.DoctorName);
-            _mailNotifier.Send(mailTextPreparer.Title, mailTextPreparer.Content);
+            if (_mailNotifier.GetReceivers().Any())
+            {
+                var mailTextPreparer = new MailTextPreparer(observeData, newTickets.ToList(), observeData.DoctorName);
+                _mailNotifier.Send(mailTextPreparer.Title, mailTextPreparer.Content);
+            }
+            foreach(var listener in _listeners)
+            {
+                listener.NewTicketsAdded(observeData, newTickets);
+            }
         }
 
         private IEnumerable<ITicket> findNewTickets(IReadOnlyList<ITicket> oldCollection, IReadOnlyList<ITicket> newCollection)
@@ -85,9 +99,19 @@ namespace CheckClinic.Detector
             return Enumerable.Except(newCollection, oldCollection, new TicketComparer());
         }
 
-        public void AddMailReceiver(string mailReceiver)
+        public void AddMailReceiver(MailAddress mailReceiver)
         {
             _mailNotifier.AddReceiver(mailReceiver);
+        }
+
+        public IReadOnlyList<MailAddress> GetMailReceivers()
+        {
+            return _mailNotifier.GetReceivers();
+        }
+
+        public void AddListener(IDetectListener detectListener)
+        {
+            _listeners.Add(detectListener);
         }
     }
 }
