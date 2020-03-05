@@ -3,9 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CheckClinicUINew"
         mc:Ignorable="d"
-        Title="MainWindow" Height="550" Width="800">
+        Title="https://gorzdrav.spb.ru/" Height="550" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -50,9 +49,8 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{Binding DoctorName}"/>
-                                <Button Width="14" Height="14" Click="onNotifyButton">
-                                    <Image Source="Resources\add.jpg">
-                                    </Image>
+                                <Button Width="14" Height="14" Click="onNotifyButton" Margin="4,0,0,0">
+                                    <Image Source="Resources\add.jpg"/> 
                                 </Button>
                             </StackPanel>
                         </DataTemplate>
@@ -69,11 +67,20 @@
             
         </Grid>
         <Grid Grid.Row="2">
-            <ListView Margin="10" ItemsSource="{Binding ObserveData}" >
+            <ListView Margin="10" ItemsSource="{Binding ObserveData}" x:Name="lvObs" >
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Doctor" Width="120" DisplayMemberBinding="{Binding DoctorName}" />
-                        <GridViewColumn Header="Tickets" Width="50" DisplayMemberBinding="{Binding Age}" />
+                        <GridViewColumn Header="Врач" Width="200" DisplayMemberBinding="{Binding ObserveData.DoctorName}" />
+                        <GridViewColumn Header="Номерки" Width="60" DisplayMemberBinding="{Binding Tickets.Count, Mode=OneWay}" />
+                        <GridViewColumn>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding ElementName=lvObs, Path=DataContext.RemoveObserverCommand}" CommandParameter="{Binding}" Width="14" Height="14">
+                                        <Image Source="Resources\delete.png"/>
+                                    </Button>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>
