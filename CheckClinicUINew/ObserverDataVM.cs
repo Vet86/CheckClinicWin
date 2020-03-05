@@ -1,25 +1,14 @@
 ﻿using CheckClinic.Interfaces;
-using CheckClinicUI.Base;
 using System.Collections.Generic;
+using PropertyChanged;
 
 namespace CheckClinic.UI
 {
-    public class ObserverDataVM : ViewModelBase
+    [AddINotifyPropertyChangedInterface]
+    public class ObserverDataVM
     {
-        private IReadOnlyList<ITicket> _tickets;
 
         public IObserveData ObserveData { get; set; }
-        public IReadOnlyList<ITicket> Tickets
-        {
-            get
-            {
-                return _tickets;
-            }
-            set
-            {
-                _tickets = value;
-                FirePropertyChange(nameof(Tickets));
-            }
-        }
+        public IReadOnlyList<ITicket> Tickets { get; set; }
     }
 }
