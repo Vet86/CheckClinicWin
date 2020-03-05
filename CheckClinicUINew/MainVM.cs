@@ -1,13 +1,13 @@
 ﻿using Autofac;
 using CheckClinic.Interfaces;
 using CheckClinic.Model;
-using CheckClinicUI.Base;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace CheckClinic.UI
 {
-    class MainVM : ViewModelBase, IDetectListener
+    class MainVM : INotifyPropertyChanged, IDetectListener
     {
         #region private fields 
         private readonly IDistrictCollectionDataResolver _districtCollectionDataResolver = ContainerHolder.Container.Resolve<IDistrictCollectionDataResolver>();
@@ -26,17 +26,6 @@ namespace CheckClinic.UI
         private readonly ITicketCollectionParser _ticketCollectionParser = ContainerHolder.Container.Resolve<ITicketCollectionParser>();
 
         private readonly IDetector _detector = ContainerHolder.Container.Resolve<IDetector>();
-        private IDistrict _selectDistrict;
-        private IClinic _selectClinic;
-        private ISpeciality _selectSpeciality;
-        private IDoctor _selectDoctor;
-        private ITicket _selectTicket;
-
-        private bool _isDistrictsExpanded;
-        private bool _isClinicsExpanded;
-        private bool _isSpecialitiesExpanded;
-        private bool _isDoctorsExpanded;
-        private bool _isTicketsExpanded;
         #endregion
 
         public MainVM()
@@ -46,250 +35,179 @@ namespace CheckClinic.UI
             Districts = _districtCollectionParser.ParseDistricts(content);
             IsDistrictsExpanded = true;
             refreshObserves();
+
+            PropertyChanged += OnPropertyChanged;
+        }
+
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+           switch (e.PropertyName)
+           {
+               case nameof(SelectDistrict):
+                  ProcessDistrictSelection();
+               break;
+
+               case nameof(SelectClinic):
+                  ProcessClinicSelection();
+               break;
+
+               case nameof(SelectSpeciality):
+                  ProcessSpecialitySelection();
+               break;
+
+               case nameof(SelectDoctor):
+                  ProcessDoctorSelection();
+               break;
+
+              case nameof(IsDistrictsExpanded):
+                 ProcessIsDistrictsExpanded();
+              break;
+
+               case nameof(IsClinicsExpanded):
+                  ProcessIsClinicsExpanded();
+                  break;
+
+               case nameof(IsSpecialitiesExpanded):
+                  ProcessIsSpecialitiesExpanded();
+                  break;
+
+               case nameof(IsDoctorsExpanded):
+                  ProcessIsDoctorsExpanded();
+                  break;
+
+               case nameof(IsTicketsExpanded):
+                  ProcessIsTicketsExpanded();
+                  break;
+            }
+         }
+
+        private void ProcessIsTicketsExpanded()
+        {
+           if (!IsTicketsExpanded)
+              return;
+
+           IsDistrictsExpanded = false;
+           IsClinicsExpanded = false;
+           IsSpecialitiesExpanded = false;
+           IsDoctorsExpanded = false;
+        }
+
+        private void ProcessIsDoctorsExpanded()
+        {
+           if (!IsDoctorsExpanded)
+              return;
+
+           IsDistrictsExpanded = false;
+           IsClinicsExpanded = false;
+           IsSpecialitiesExpanded = false;
+           IsTicketsExpanded = false;
+        }
+
+        private void ProcessIsSpecialitiesExpanded()
+        {
+           if (!IsSpecialitiesExpanded)
+              return;
+
+           IsDistrictsExpanded = false;
+           IsClinicsExpanded = false;
+           IsDoctorsExpanded = false;
+           IsTicketsExpanded = false;
+        }
+
+        private void ProcessIsDistrictsExpanded()
+        {
+           if (!IsDistrictsExpanded)
+              return;
+
+           IsClinicsExpanded = false;
+           IsSpecialitiesExpanded = false;
+           IsDoctorsExpanded = false;
+           IsTicketsExpanded = false;
+        }
+
+        private void ProcessIsClinicsExpanded()
+        {
+           if (!IsClinicsExpanded)
+              return;
+
+           IsDistrictsExpanded = false;
+           IsSpecialitiesExpanded = false;
+           IsDoctorsExpanded = false;
+           IsTicketsExpanded = false;
+        }
+
+        private void ProcessDoctorSelection()
+        {
+           if (SelectDoctor == null)
+           {
+              Tickets = null;
+              return;
+           }
+
+           string content = _ticketCollectionDataResolver.RequestProcess(SelectClinic.Id, SelectDoctor.Id);
+           Tickets = _ticketCollectionParser.Parse(content);
+           IsTicketsExpanded = true;
+        }
+
+        private void ProcessSpecialitySelection()
+        {
+           if (SelectSpeciality == null)
+           {
+              Doctors = null;
+              return;
+           }
+
+           string content = _doctorCollectionDataResolver.RequestProcess(SelectClinic.Id, SelectSpeciality.Id);
+           Doctors = _doctorCollectionParser.ParseDoctors(content);
+           IsDoctorsExpanded = true;
+        }
+
+        private void ProcessClinicSelection()
+        {
+           if (SelectClinic == null)
+           {
+              Specialities = null;
+              return;
+           }
+
+           string content = _specialityCollectionDataResolver.RequestProcess(SelectClinic.Id);
+           Specialities = _specialityCollectionParser.ParseSpecialities(content);
+           IsSpecialitiesExpanded = true;
+        }
+
+        private void ProcessDistrictSelection()
+        {
+           string content = _clinicCollectionDataResolver.RequestProcess(SelectDistrict.Id);
+           Clinics = _clinicCollectionParser.ParseClinics(content);
+           IsClinicsExpanded = true;
         }
 
         public IList<IDistrict> Districts { get; set; }
-        public IDistrict SelectDistrict
-        {
-            get
-            {
-                return _selectDistrict;
-            }
-            set
-            {
-                if (_selectDistrict == value)
-                    return;
-
-                _selectDistrict = value;
-                FirePropertyChange(nameof(SelectDistrict));
-
-                string content = _clinicCollectionDataResolver.RequestProcess(_selectDistrict.Id);
-                Clinics = _clinicCollectionParser.ParseClinics(content);
-                FirePropertyChange(nameof(Clinics));
-                IsClinicsExpanded = true;
-            }
-        }
+        public IDistrict SelectDistrict { get; set; }
 
         public IList<IClinic> Clinics { get; set; }
-        public IClinic SelectClinic
-        {
-            get
-            {
-                return _selectClinic;
-            }
-            set
-            {
-                if (_selectClinic == value)
-                    return;
-
-                _selectClinic = value;
-                FirePropertyChange(nameof(SelectClinic));
-
-                if (_selectClinic != null)
-                {
-                    string content = _specialityCollectionDataResolver.RequestProcess(_selectClinic.Id);
-                    Specialities = _specialityCollectionParser.ParseSpecialities(content);
-                    IsSpecialitiesExpanded = true;
-                }
-                else
-                {
-                    Specialities = null;
-                }
-                FirePropertyChange(nameof(Specialities));
-            }
-        }
+        public IClinic SelectClinic { get; set; }
 
         public IList<ISpeciality> Specialities { get; set; }
-        public ISpeciality SelectSpeciality
-        {
-            get
-            {
-                return _selectSpeciality;
-            }
-            set
-            {
-                if (_selectSpeciality == value)
-                    return;
-
-                _selectSpeciality = value;
-                FirePropertyChange(nameof(SelectSpeciality));
-
-                if (_selectSpeciality != null)
-                {
-                    string content = _doctorCollectionDataResolver.RequestProcess(_selectClinic.Id, _selectSpeciality.Id);
-                    Doctors = _doctorCollectionParser.ParseDoctors(content);
-                    IsDoctorsExpanded = true;
-                }
-                else
-                {
-                    Doctors = null;
-                }
-                FirePropertyChange(nameof(Doctors));
-            }
-        }
+        public ISpeciality SelectSpeciality { get; set; }
 
         public IList<IDoctor> Doctors { get; set; }
-        public IDoctor SelectDoctor
-        {
-            get
-            {
-                return _selectDoctor;
-            }
-            set
-            {
-                if (_selectDoctor == value)
-                    return;
-
-                _selectDoctor = value;
-                FirePropertyChange(nameof(SelectDoctor));
-
-                if (_selectDoctor != null)
-                {
-                    string content = _ticketCollectionDataResolver.RequestProcess(_selectClinic.Id, _selectDoctor.Id);
-                    Tickets = _ticketCollectionParser.Parse(content);
-                    IsTicketsExpanded = true;
-                }
-                else
-                {
-                    Tickets = null;
-                }
-                FirePropertyChange(nameof(Tickets));
-            }
-        }
+        public IDoctor SelectDoctor { get; set; }
 
         public IReadOnlyCollection<ITicket> Tickets { get; set; }
-        public ITicket SelectTicket
-        {
-            get
-            {
-                return _selectTicket;
-            }
-            set
-            {
-                if (_selectTicket == value)
-                    return;
-
-                _selectTicket = value;
-                FirePropertyChange(nameof(SelectTicket));
-            }
-        }
+        public ITicket SelectTicket { get; set; }
 
         public IReadOnlyList<IObserveData> ObserveData { get; private set; }
 
-        public bool IsDistrictsExpanded
-        {
-            get
-            {
-                return _isDistrictsExpanded;
-            }
-            set
-            {
-                if (_isDistrictsExpanded == value)
-                    return;
+        public bool IsDistrictsExpanded { get; set; }
 
-                _isDistrictsExpanded = value;
-                FirePropertyChange(nameof(IsDistrictsExpanded));
-                if (_isDistrictsExpanded)
-                {
-                    IsClinicsExpanded = false;
-                    IsSpecialitiesExpanded = false;
-                    IsDoctorsExpanded = false;
-                    IsTicketsExpanded = false;
-                }
-            }
-        }
+        public bool IsClinicsExpanded { get; set; }
 
-        public bool IsClinicsExpanded
-        {
-            get
-            {
-                return _isClinicsExpanded;
-            }
-            set
-            {
-                if (_isClinicsExpanded == value)
-                    return;
+        public bool IsSpecialitiesExpanded { get; set; }
 
-                _isClinicsExpanded = value;
-                FirePropertyChange(nameof(IsClinicsExpanded));
-                if (_isClinicsExpanded)
-                {
-                    IsDistrictsExpanded = false;
-                    IsSpecialitiesExpanded = false;
-                    IsDoctorsExpanded = false;
-                    IsTicketsExpanded = false;
-                }
-            }
-        }
+        public bool IsDoctorsExpanded { get; set; }
 
-        public bool IsSpecialitiesExpanded
-        {
-            get
-            {
-                return _isSpecialitiesExpanded;
-            }
-            set
-            {
-                if (_isSpecialitiesExpanded == value)
-                    return;
-
-                _isSpecialitiesExpanded = value;
-                FirePropertyChange(nameof(IsSpecialitiesExpanded));
-                if (_isSpecialitiesExpanded)
-                {
-                    IsDistrictsExpanded = false;
-                    IsClinicsExpanded = false;
-                    IsDoctorsExpanded = false;
-                    IsTicketsExpanded = false;
-                }
-            }
-        }
-
-        public bool IsDoctorsExpanded
-        {
-            get
-            {
-                return _isDoctorsExpanded;
-            }
-            set
-            {
-                if (_isDoctorsExpanded == value)
-                    return;
-
-                _isDoctorsExpanded = value;
-                FirePropertyChange(nameof(IsDoctorsExpanded));
-                if (_isDoctorsExpanded)
-                {
-                    IsDistrictsExpanded = false;
-                    IsClinicsExpanded = false;
-                    IsSpecialitiesExpanded = false;
-                    IsTicketsExpanded = false;
-                }
-            }
-        }
-
-        public bool IsTicketsExpanded
-        {
-            get
-            {
-                return _isTicketsExpanded;
-            }
-            set
-            {
-                if (_isTicketsExpanded == value)
-                    return;
-
-                _isTicketsExpanded = value;
-                FirePropertyChange(nameof(IsTicketsExpanded));
-                if (_isTicketsExpanded)
-                {
-                    IsDistrictsExpanded = false;
-                    IsClinicsExpanded = false;
-                    IsSpecialitiesExpanded = false;
-                    IsDoctorsExpanded = false;
-                }
-            }
-        }
+        public bool IsTicketsExpanded { get; set; }
 
         public void NewTicketsAdded(IObserveData observeData, IEnumerable<ITicket> newTickets)
         {
@@ -298,21 +216,25 @@ namespace CheckClinic.UI
 
         internal void AddOservable(IDoctor doctor)
         {
-            var observeData = new ObserveData(_selectClinic.Id, doctor.Id, doctor.DoctorName);
-            _detector.Add(observeData);
-            refreshObserves();
+           var observeData = new ObserveData(SelectClinic.Id, doctor.Id, doctor.DoctorName);
+           _detector.Add(observeData);
+           refreshObserves();
         }
 
         private void refreshObserves()
         {
-            ObserveData = _detector.GetObserves();
-            FirePropertyChange(nameof(ObserveData));
+           ObserveData = _detector.GetObserves();
         }
 
         private IReadOnlyList<ITicket> GetTickets(string clinicId, string doctorId)
         {
-            string content = _ticketCollectionDataResolver.RequestProcess(clinicId, doctorId);
-            return _ticketCollectionParser.Parse(content);
+           string content = _ticketCollectionDataResolver.RequestProcess(clinicId, doctorId);
+           return _ticketCollectionParser.Parse(content);
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+           => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
