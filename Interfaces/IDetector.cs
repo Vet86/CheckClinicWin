@@ -12,6 +12,7 @@ namespace CheckClinic.Interfaces
         IReadOnlyList<IObserveData> GetObserves();
 
         void AddMailReceiver(MailAddress mailReceiver);
+        void ClearReceivers();
         IReadOnlyList<MailAddress> GetMailReceivers();
 
         void AddListener(IDetectListener detectListener);

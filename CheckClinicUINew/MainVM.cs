@@ -5,6 +5,10 @@ using CheckClinicUI.Base;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
+
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -36,6 +40,7 @@ namespace CheckClinic.UI
         {
             _detector.AddListener(this);
             RemoveObserverCommand = new RelayCommand(removeObserver, x => true);
+            OpenSettingsCommand = new RelayCommand(x=>openSettings(), y => true);
             string content = _districtCollectionDataResolver.RequestProcess();
             Districts = _districtCollectionParser.ParseDistricts(content);
             IsDistrictsExpanded = true;
@@ -214,6 +219,7 @@ namespace CheckClinic.UI
         public bool IsTicketsExpanded { get; set; }
 
         public RelayCommand RemoveObserverCommand { get; private set; }
+        public RelayCommand OpenSettingsCommand { get; private set; }
 
         public void NewTicketsAdded(IObserveData observeData, IEnumerable<ITicket> newTickets)
         {
@@ -247,6 +253,32 @@ namespace CheckClinic.UI
         {
             string content = _ticketCollectionDataResolver.RequestProcess(clinicId, doctorId);
             return _ticketCollectionParser.Parse(content);
+        }
+
+        private void openSettings()
+        {
+            var settingsView = new SettingsView();
+            var settingsVM = new SettingsVM();
+            foreach (var receiver in _detector.GetMailReceivers())
+            {
+                settingsVM.Receivers.Add(new Receiver() { Name = receiver.Address });
+            }
+            settingsView.DataContext = settingsVM;
+            if (settingsView.ShowDialog() == true)
+            {
+                _detector.ClearReceivers();
+                foreach(var receiver in settingsVM.Receivers)
+                {
+                    try
+                    {
+                        _detector.AddMailReceiver(new System.Net.Mail.MailAddress(receiver.Name));
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

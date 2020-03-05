@@ -113,5 +113,10 @@ namespace CheckClinic.Detector
         {
             _listeners.Add(detectListener);
         }
+
+        public void ClearReceivers()
+        {
+            _mailNotifier.ClearAllReceivers();
+        }
     }
 }

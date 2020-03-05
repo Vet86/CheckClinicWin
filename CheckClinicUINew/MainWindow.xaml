@@ -10,7 +10,14 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto" MinHeight="100"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        <Menu>
+            <MenuItem Header="Меню">
+                <MenuItem Header="Настройки" Command="{Binding OpenSettingsCommand}"/>
+                <MenuItem Header="Выход"/>
+            </MenuItem>
+        </Menu>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
