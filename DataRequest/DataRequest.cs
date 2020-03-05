@@ -56,7 +56,14 @@ namespace CheckClinic.DataRequest
         {
             foreach (var obs in _observes)
             {
-                NewDataReceived(obs, receive(obs));
+                try
+                {
+                    NewDataReceived(obs, receive(obs));
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
         }
 

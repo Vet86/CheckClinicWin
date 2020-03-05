@@ -2,8 +2,10 @@
 using CheckClinic.Interfaces;
 using CheckClinic.Model;
 using CheckClinicUI.Base;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace CheckClinic.UI
 {
@@ -42,6 +44,7 @@ namespace CheckClinic.UI
         public MainVM()
         {
             _detector.AddListener(this);
+            RemoveObserverCommand = new RelayCommand(removeObserver, x => true);
             string content = _districtCollectionDataResolver.RequestProcess();
             Districts = _districtCollectionParser.ParseDistricts(content);
             IsDistrictsExpanded = true;
@@ -174,7 +177,7 @@ namespace CheckClinic.UI
             }
         }
 
-        public IReadOnlyList<IObserveData> ObserveData { get; private set; }
+        public IReadOnlyList<ObserverDataVM> ObserveData { get; private set; }
 
         public bool IsDistrictsExpanded
         {
@@ -281,19 +284,25 @@ namespace CheckClinic.UI
 
                 _isTicketsExpanded = value;
                 FirePropertyChange(nameof(IsTicketsExpanded));
-                if (_isTicketsExpanded)
+                /*if (_isTicketsExpanded)
                 {
                     IsDistrictsExpanded = false;
                     IsClinicsExpanded = false;
                     IsSpecialitiesExpanded = false;
                     IsDoctorsExpanded = false;
-                }
+                }*/
             }
         }
 
+        public RelayCommand RemoveObserverCommand { get; private set; }
+
         public void NewTicketsAdded(IObserveData observeData, IEnumerable<ITicket> newTickets)
         {
-            
+            var observerVM = ObserveData.FirstOrDefault(x => x.ObserveData == observeData);
+            if (observerVM == null)
+                return;
+
+            observerVM.Tickets = GetTickets(observerVM.ObserveData.ClinicId, observerVM.ObserveData.DoctorId);
         }
 
         internal void AddOservable(IDoctor doctor)
@@ -303,9 +312,16 @@ namespace CheckClinic.UI
             refreshObserves();
         }
 
+        private void removeObserver(object obj)
+        {
+            var obs = (ObserverDataVM)obj;
+            _detector.Remove(obs.ObserveData);
+            refreshObserves();
+        }
+
         private void refreshObserves()
         {
-            ObserveData = _detector.GetObserves();
+            ObserveData = _detector.GetObserves().Select(x=> new ObserverDataVM() { ObserveData = x, Tickets = GetTickets(x.ClinicId, x.DoctorId) }).ToList();
             FirePropertyChange(nameof(ObserveData));
         }
 
