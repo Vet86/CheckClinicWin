@@ -1,6 +1,9 @@
-﻿namespace CheckClinicUI.Base
+﻿using PropertyChanged;
+
+namespace CheckClinicUI.Base
 {
-    public class ViewModelBase<T> : NotifyPropertyChangedBase
+    [AddINotifyPropertyChangedInterface]
+    public class ViewModelBase<T>
     {
         public ViewModelBase()
         {
@@ -14,7 +17,8 @@
         public T Model { get; set; }
     }
 
-    public class ViewModelBase : NotifyPropertyChangedBase
+    [AddINotifyPropertyChangedInterface]
+    public class ViewModelBase
     {
         public ViewModelBase()
         {
