@@ -4,9 +4,9 @@ using CheckClinic.Model;
 using CheckClinicUI.Base;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
+using System.Windows;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace CheckClinic.UI
@@ -36,71 +36,57 @@ namespace CheckClinic.UI
         {
             _detector.AddListener(this);
             RemoveObserverCommand = new RelayCommand(removeObserver, x => true);
+            OpenSettingsCommand = new RelayCommand(x => openSettings(), y => true);
             string content = _districtCollectionDataResolver.RequestProcess();
             Districts = _districtCollectionParser.ParseDistricts(content);
             IsDistrictsExpanded = true;
             refreshObserves();
 
-            PropertyChanged += OnPropertyChanged;
+            PropertyChanged += onPropertyChanged;
         }
 
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void onPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
-               case nameof(SelectDistrict):
-                  ProcessDistrictSelection();
-                  break;
+                case nameof(SelectDistrict):
+                    processDistrictSelection();
+                    break;
 
-               case nameof(SelectClinic):
-                  ProcessClinicSelection();
-                  break;
+                case nameof(SelectClinic):
+                    processClinicSelection();
+                    break;
 
-               case nameof(SelectSpeciality):
-                  ProcessSpecialitySelection();
-                  break;
+                case nameof(SelectSpeciality):
+                    processSpecialitySelection();
+                    break;
 
-               case nameof(SelectDoctor):
-                  ProcessDoctorSelection();
-                  break;
+                case nameof(SelectDoctor):
+                    processDoctorSelection();
+                    break;
 
-               case nameof(IsDistrictsExpanded):
-                  ProcessIsDistrictsExpanded();
-                  break;
+                case nameof(IsDistrictsExpanded):
+                    processIsDistrictsExpanded();
+                    break;
 
-               case nameof(IsClinicsExpanded):
-                  ProcessIsClinicsExpanded();
-                  break;
+                case nameof(IsClinicsExpanded):
+                    processIsClinicsExpanded();
+                    break;
 
-               case nameof(IsSpecialitiesExpanded):
-                  ProcessIsSpecialitiesExpanded();
-                  break;
+                case nameof(IsSpecialitiesExpanded):
+                    processIsSpecialitiesExpanded();
+                    break;
 
-               case nameof(IsDoctorsExpanded):
-                  ProcessIsDoctorsExpanded();
-                  break;
-
-               case nameof(IsTicketsExpanded):
-                  ProcessIsTicketsExpanded();
-                  break;
-           }
+                case nameof(IsDoctorsExpanded):
+                    processIsDoctorsExpanded();
+                    break;
+            }
         }
 
-        private void ProcessIsTicketsExpanded()
-        {
-            if (!IsTicketsExpanded)
-               return;
-
-            /*IsDistrictsExpanded = false;
-            IsClinicsExpanded = false;
-            IsSpecialitiesExpanded = false;
-            IsDoctorsExpanded = false;*/
-        }
-
-        private void ProcessIsDoctorsExpanded()
+        private void processIsDoctorsExpanded()
         {
             if (!IsDoctorsExpanded)
-               return;
+                return;
 
             IsDistrictsExpanded = false;
             IsClinicsExpanded = false;
@@ -108,10 +94,10 @@ namespace CheckClinic.UI
             IsTicketsExpanded = false;
         }
 
-        private void ProcessIsSpecialitiesExpanded()
+        private void processIsSpecialitiesExpanded()
         {
             if (!IsSpecialitiesExpanded)
-               return;
+                return;
 
             IsDistrictsExpanded = false;
             IsClinicsExpanded = false;
@@ -119,10 +105,10 @@ namespace CheckClinic.UI
             IsTicketsExpanded = false;
         }
 
-        private void ProcessIsDistrictsExpanded()
+        private void processIsDistrictsExpanded()
         {
             if (!IsDistrictsExpanded)
-               return;
+                return;
 
             IsClinicsExpanded = false;
             IsSpecialitiesExpanded = false;
@@ -130,10 +116,10 @@ namespace CheckClinic.UI
             IsTicketsExpanded = false;
         }
 
-        private void ProcessIsClinicsExpanded()
+        private void processIsClinicsExpanded()
         {
             if (!IsClinicsExpanded)
-               return;
+                return;
 
             IsDistrictsExpanded = false;
             IsSpecialitiesExpanded = false;
@@ -141,12 +127,12 @@ namespace CheckClinic.UI
             IsTicketsExpanded = false;
         }
 
-        private void ProcessDoctorSelection()
+        private void processDoctorSelection()
         {
             if (SelectDoctor == null)
             {
-               Tickets = null;
-               return;
+                Tickets = null;
+                return;
             }
 
             string content = _ticketCollectionDataResolver.RequestProcess(SelectClinic.Id, SelectDoctor.Id);
@@ -154,12 +140,12 @@ namespace CheckClinic.UI
             IsTicketsExpanded = true;
         }
 
-        private void ProcessSpecialitySelection()
+        private void processSpecialitySelection()
         {
             if (SelectSpeciality == null)
             {
-               Doctors = null;
-               return;
+                Doctors = null;
+                return;
             }
 
             string content = _doctorCollectionDataResolver.RequestProcess(SelectClinic.Id, SelectSpeciality.Id);
@@ -167,12 +153,12 @@ namespace CheckClinic.UI
             IsDoctorsExpanded = true;
         }
 
-        private void ProcessClinicSelection()
+        private void processClinicSelection()
         {
             if (SelectClinic == null)
             {
-               Specialities = null;
-               return;
+                Specialities = null;
+                return;
             }
 
             string content = _specialityCollectionDataResolver.RequestProcess(SelectClinic.Id);
@@ -180,11 +166,11 @@ namespace CheckClinic.UI
             IsSpecialitiesExpanded = true;
         }
 
-        private void ProcessDistrictSelection()
+        private void processDistrictSelection()
         {
-         string content = _clinicCollectionDataResolver.RequestProcess(SelectDistrict.Id);
-         Clinics = _clinicCollectionParser.ParseClinics(content);
-         IsClinicsExpanded = true;
+            string content = _clinicCollectionDataResolver.RequestProcess(SelectDistrict.Id);
+            Clinics = _clinicCollectionParser.ParseClinics(content);
+            IsClinicsExpanded = true;
         }
 
         public IList<IDistrict> Districts { get; set; }
@@ -214,6 +200,7 @@ namespace CheckClinic.UI
         public bool IsTicketsExpanded { get; set; }
 
         public RelayCommand RemoveObserverCommand { get; private set; }
+        public RelayCommand OpenSettingsCommand { get; private set; }
 
         public void NewTicketsAdded(IObserveData observeData, IEnumerable<ITicket> newTickets)
         {
@@ -240,7 +227,7 @@ namespace CheckClinic.UI
 
         private void refreshObserves()
         {
-            ObserveData = _detector.GetObserves().Select(x=> new ObserverDataVM() { ObserveData = x, Tickets = GetTickets(x.ClinicId, x.DoctorId) }).ToList();
+            ObserveData = _detector.GetObserves().Select(x => new ObserverDataVM() { ObserveData = x, Tickets = GetTickets(x.ClinicId, x.DoctorId) }).ToList();
         }
 
         private IReadOnlyList<ITicket> GetTickets(string clinicId, string doctorId)
@@ -249,11 +236,37 @@ namespace CheckClinic.UI
             return _ticketCollectionParser.Parse(content);
         }
 
+        private void openSettings()
+        {
+            var settingsView = new SettingsView();
+            var settingsVM = new SettingsVM();
+            foreach (var receiver in _detector.GetMailReceivers())
+            {
+                settingsVM.Receivers.Add(new Receiver() { Name = receiver.Address });
+            }
+            settingsView.DataContext = settingsVM;
+            if (settingsView.ShowDialog() == true)
+            {
+                _detector.ClearReceivers();
+                foreach (var receiver in settingsVM.Receivers)
+                {
+                    try
+                    {
+                        _detector.AddMailReceiver(new System.Net.Mail.MailAddress(receiver.Name));
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-           PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

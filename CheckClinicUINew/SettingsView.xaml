@@ -1,0 +1,27 @@
+﻿<Window x:Class="CheckClinic.UI.SettingsView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CheckClinic.UI"
+        mc:Ignorable="d"
+        Title="Настройки" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <HeaderedContentControl Grid.Row="0" Header="Кого нотифицировать">
+            <DataGrid ItemsSource="{Binding Receivers}" CanUserAddRows="True" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Name}" Header="email" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid> 
+        </HeaderedContentControl>
+
+        <StackPanel Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal" Margin="4">
+            <Button IsDefault="True" Content="Ok" Width="40" Height="24" Click="onOkClicked"/>
+            <Button IsCancel="True" Content="Cancel" Width="40" Height="24" Margin="4,0,0,0"/>
+        </StackPanel>
+    </Grid>
+</Window>
