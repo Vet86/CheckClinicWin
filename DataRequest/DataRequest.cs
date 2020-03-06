@@ -11,6 +11,7 @@ namespace CheckClinic.DataRequest
         private Timer _timer;
         private ITicketCollectionDataResolver _ticketCollectionDataResolver;
         private ITicketCollectionParser _ticketCollectionParser;
+        private TimeSpan _interval;
 
         public DataRequest(ITicketCollectionDataResolver ticketCollectionDataResolver, ITicketCollectionParser ticketCollectionParser)
         {
@@ -38,18 +39,23 @@ namespace CheckClinic.DataRequest
 
         public void SetInterval(TimeSpan timeSpan)
         {
+            _interval = timeSpan;
             System.Diagnostics.Trace.Assert(_timer.Change(0, (int)timeSpan.TotalMilliseconds));
+        }
+
+        public TimeSpan GetInterval()
+        {
+            return _interval;
         }
 
         public void Start()
         {
-            //_timer.
-            //ontTimerTick(null, null);
+            throw new NotImplementedException();
         }
 
         public void Stop()
         {
-            //_timer.Stop();
+            throw new NotImplementedException();
         }
 
         private void onTimerTick(object state)

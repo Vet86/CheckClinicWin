@@ -6,6 +6,7 @@ namespace CheckClinic.Interfaces
     public interface IDataRequest
     {
         void SetInterval(TimeSpan timeSpan);
+        TimeSpan GetInterval();
         void Add(IObserveData observeData);
         void Remove(IObserveData observeData);
         void Start();

@@ -18,5 +18,10 @@ namespace CheckClinicUINew
             var doctor = (IDoctor)((Button)sender).DataContext;
             ((MainVM)DataContext).AddOservable(doctor);
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            ((MainVM)DataContext).Save();
+        }
     }
 }

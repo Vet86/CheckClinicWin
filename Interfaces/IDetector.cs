@@ -16,5 +16,14 @@ namespace CheckClinic.Interfaces
         IReadOnlyList<MailAddress> GetMailReceivers();
 
         void AddListener(IDetectListener detectListener);
+
+        void SetUpdateInterval(TimeSpan interval);
+        TimeSpan GetUpdateInterval();
+
+        string ExportSettings();
+        void ImportSettings(string settings);
+
+        string ExportData();
+        void ImportData(string data);
     }
 }

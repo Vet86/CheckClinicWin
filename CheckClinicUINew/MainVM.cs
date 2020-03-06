@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Configuration;
 
 namespace CheckClinic.UI
 {
@@ -41,8 +42,11 @@ namespace CheckClinic.UI
             Districts = _districtCollectionParser.ParseDistricts(content);
             IsDistrictsExpanded = true;
             refreshObserves();
-
+            Load();
             PropertyChanged += onPropertyChanged;
+
+            if (_detector.GetMailReceivers().Count == 0)
+                openSettings();
         }
 
         private void onPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -244,6 +248,10 @@ namespace CheckClinic.UI
             {
                 settingsVM.Receivers.Add(new Receiver() { Name = receiver.Address });
             }
+            settingsVM.Interval = (int)_detector.GetUpdateInterval().TotalSeconds;
+
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
+            settingsVM.ConfigurationPath = config.FilePath;
             settingsView.DataContext = settingsVM;
             if (settingsView.ShowDialog() == true)
             {
@@ -260,6 +268,7 @@ namespace CheckClinic.UI
                     }
                 }
             }
+            _detector.SetUpdateInterval(TimeSpan.FromSeconds(settingsVM.Interval));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -267,6 +276,17 @@ namespace CheckClinic.UI
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        internal void Save()
+        {
+            Properties.Settings.Default["UserSettings"] = _detector.ExportSettings();
+            Properties.Settings.Default.Save();
+        }
+
+        internal void Load()
+        {
+            _detector.ImportSettings(Properties.Settings.Default["UserSettings"].ToString());
         }
     }
 }
