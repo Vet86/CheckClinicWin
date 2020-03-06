@@ -6,12 +6,20 @@
         xmlns:local="clr-namespace:CheckClinic.UI"
         mc:Ignorable="d"
         Title="Настройки" Height="450" Width="800">
-    <Grid>
+    <Grid Margin="8,4">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <HeaderedContentControl Grid.Row="0" Header="Кого нотифицировать">
+        <HeaderedContentControl Grid.Row="0" Header="Интервал обновлений, сек">
+            <StackPanel>
+                <TextBox Text="{Binding Interval, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+        </HeaderedContentControl>
+        
+        <HeaderedContentControl Grid.Row="1" Header="Получатели почтовых уведомлений" Margin="0,8,0,0">
             <DataGrid ItemsSource="{Binding Receivers}" CanUserAddRows="True" AutoGenerateColumns="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Name}" Header="email" Width="*"/>
@@ -19,7 +27,17 @@
             </DataGrid> 
         </HeaderedContentControl>
 
-        <StackPanel Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal" Margin="4">
+        <HeaderedContentControl Grid.Row="2" Header="Путь к конфигурационному файлу" Margin="0,8,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding ConfigurationPath}"/>
+                <Button Grid.Column="1" Content="Копировать" Command="{Binding CopyToClipboardCommand}"/>
+            </Grid>
+        </HeaderedContentControl>
+        <StackPanel Grid.Row="3" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,4,0,0">
             <Button IsDefault="True" Content="Ok" Width="40" Height="24" Click="onOkClicked"/>
             <Button IsCancel="True" Content="Cancel" Width="40" Height="24" Margin="4,0,0,0"/>
         </StackPanel>

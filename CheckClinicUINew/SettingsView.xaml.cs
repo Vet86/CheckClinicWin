@@ -26,7 +26,9 @@ namespace CheckClinic.UI
 
         private void onOkClicked(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
+            var settings = (SettingsVM)DataContext;
+            if (settings.Verify())
+                DialogResult = true;
         }
     }
 }

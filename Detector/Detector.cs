@@ -1,5 +1,7 @@
 ﻿using Autofac;
+using CheckClinic.Detector.Model;
 using CheckClinic.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,7 +22,7 @@ namespace CheckClinic.Detector
             _dataRequest = ContainerHolder.Container.Resolve<IDataRequest>();
             _mailNotifier = ContainerHolder.Container.Resolve<IMailNotifier>();
             _dataRequest.NewDataReceived += onNewDataReceived;
-            _dataRequest.SetInterval(TimeSpan.FromMinutes(5));
+            _dataRequest.SetInterval(TimeSpan.FromMinutes(1));
         }
 
         public IReadOnlyList<IObserveData> GetObserves()
@@ -117,6 +119,54 @@ namespace CheckClinic.Detector
         public void ClearReceivers()
         {
             _mailNotifier.ClearAllReceivers();
+        }
+
+        public void SetUpdateInterval(TimeSpan interval)
+        {
+            _dataRequest.SetInterval(interval);
+        }
+
+        public TimeSpan GetUpdateInterval()
+        {
+            return _dataRequest.GetInterval();
+        }
+
+        public string ExportSettings()
+        {
+            var settingsModel = new SettingsModel();
+            foreach(var receiver in _mailNotifier.GetReceivers())
+            {
+                settingsModel.ReceiverModels.Add(new ReceiverModel() { Email = receiver.Address });
+            }
+            settingsModel.Interval = _dataRequest.GetInterval();
+            settingsModel.Version = new Version(0, 0, 0, 1);
+
+            JsonSerializer serializer = new JsonSerializer();
+            var textWriter = new StringWriter();
+            serializer.Serialize(textWriter, settingsModel);
+            return textWriter.ToString();
+        }
+
+        public void ImportSettings(string settings)
+        {
+            var settingsModel = JsonConvert.DeserializeObject<SettingsModel>(settings);
+            _mailNotifier.ClearAllReceivers();
+            foreach(var receiver in settingsModel.ReceiverModels)
+            {
+                _mailNotifier.AddReceiver(new MailAddress(receiver.Email));
+            }
+            _dataRequest.SetInterval(settingsModel.Interval);
+            _dataRequest.SetInterval(settingsModel.Interval);
+        }
+
+        public string ExportData()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ImportData(string data)
+        {
+            throw new NotImplementedException();
         }
     }
 }
