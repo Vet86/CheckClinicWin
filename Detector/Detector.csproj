@@ -61,6 +61,7 @@
     <Compile Include="ContainerHolder.cs" />
     <Compile Include="Detector.cs" />
     <Compile Include="MailTextPreparer.cs" />
+    <Compile Include="Model\ObserverCollectionModel.cs" />
     <Compile Include="Model\ReceiverModel.cs" />
     <Compile Include="Model\SettingsModel.cs" />
     <Compile Include="TicketComparer.cs" />

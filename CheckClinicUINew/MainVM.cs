@@ -281,12 +281,15 @@ namespace CheckClinic.UI
         internal void Save()
         {
             Properties.Settings.Default["UserSettings"] = _detector.ExportSettings();
+            Properties.Settings.Default["UserData"] = _detector.ExportData();
             Properties.Settings.Default.Save();
         }
 
         internal void Load()
         {
             _detector.ImportSettings(Properties.Settings.Default["UserSettings"].ToString());
+            _detector.ImportData(Properties.Settings.Default["UserData"].ToString());
+            refreshObserves();
         }
     }
 }
