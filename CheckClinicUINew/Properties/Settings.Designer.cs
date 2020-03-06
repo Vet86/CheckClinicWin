@@ -34,5 +34,17 @@ namespace CheckClinic.UI.Properties {
                 this["UserSettings"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string UserData {
+            get {
+                return ((string)(this["UserData"]));
+            }
+            set {
+                this["UserData"] = value;
+            }
+        }
     }
 }

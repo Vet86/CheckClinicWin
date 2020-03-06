@@ -1,6 +1,4 @@
 ﻿using CheckClinicUI.Base;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Mail;
 using System.Windows;

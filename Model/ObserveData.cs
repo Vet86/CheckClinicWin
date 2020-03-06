@@ -4,6 +4,17 @@ namespace CheckClinic.Model
 {
     public class ObserveData : IObserveData
     {
+        public ObserveData()
+        {
+        }
+
+        public ObserveData(IObserveData observeData)
+        {
+            ClinicId = observeData.ClinicId;
+            DoctorId = observeData.DoctorId;
+            DoctorName = observeData.DoctorName;
+        }
+
         public ObserveData(string clinicId, string doctorId, string doctorName)
         {
             ClinicId = clinicId;

@@ -17,7 +17,6 @@ namespace CheckClinic.DataRequest
         {
             _ticketCollectionDataResolver = ticketCollectionDataResolver;
             _ticketCollectionParser = ticketCollectionParser;
-            _timer = new Timer(onTimerTick, null, 0, 10000);
         }
 
         public Action<IObserveData, IReadOnlyList<ITicket>> NewDataReceived { get; set; }
@@ -39,8 +38,15 @@ namespace CheckClinic.DataRequest
 
         public void SetInterval(TimeSpan timeSpan)
         {
+            if (_timer == null)
+            {
+                _timer = new Timer(onTimerTick, null, 0, (int)timeSpan.TotalMilliseconds);
+            }
+            else
+            {
+                System.Diagnostics.Trace.Assert(_timer.Change(0, (int)timeSpan.TotalMilliseconds));
+            }
             _interval = timeSpan;
-            System.Diagnostics.Trace.Assert(_timer.Change(0, (int)timeSpan.TotalMilliseconds));
         }
 
         public TimeSpan GetInterval()

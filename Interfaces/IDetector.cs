@@ -9,6 +9,7 @@ namespace CheckClinic.Interfaces
         void Add(IObserveData observeData);
         void Add(IObserveData observeData, DateTime dateTime);
         void Remove(IObserveData observeData);
+        void RemoveAll();
         IReadOnlyList<IObserveData> GetObserves();
 
         void AddMailReceiver(MailAddress mailReceiver);

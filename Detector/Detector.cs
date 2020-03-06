@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using CheckClinic.Detector.Model;
 using CheckClinic.Interfaces;
+using CheckClinic.Model;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -53,6 +54,15 @@ namespace CheckClinic.Detector
             {
                 _data.Remove(observeData);
                 _dataRequest.Remove(observeData);
+            }
+        }
+
+        public void RemoveAll()
+        {
+            foreach(var item in _data.Keys.ToArray())
+            {
+                _data.Remove(item);
+                _dataRequest.Remove(item);
             }
         }
 
@@ -141,32 +151,59 @@ namespace CheckClinic.Detector
             settingsModel.Interval = _dataRequest.GetInterval();
             settingsModel.Version = new Version(0, 0, 0, 1);
 
-            JsonSerializer serializer = new JsonSerializer();
-            var textWriter = new StringWriter();
-            serializer.Serialize(textWriter, settingsModel);
-            return textWriter.ToString();
+            return serialize(settingsModel);
         }
 
         public void ImportSettings(string settings)
         {
+            if (string.IsNullOrWhiteSpace(settings))
+                return;
+
             var settingsModel = JsonConvert.DeserializeObject<SettingsModel>(settings);
             _mailNotifier.ClearAllReceivers();
-            foreach(var receiver in settingsModel.ReceiverModels)
+            if (settingsModel != null)
             {
-                _mailNotifier.AddReceiver(new MailAddress(receiver.Email));
+                foreach (var receiver in settingsModel.ReceiverModels)
+                {
+                    _mailNotifier.AddReceiver(new MailAddress(receiver.Email));
+                }
+                _dataRequest.SetInterval(settingsModel.Interval);
             }
-            _dataRequest.SetInterval(settingsModel.Interval);
-            _dataRequest.SetInterval(settingsModel.Interval);
         }
 
         public string ExportData()
         {
-            throw new NotImplementedException();
+            var observerCollectionModel = new ObserverCollectionModel();
+            foreach (var observeData in GetObserves())
+            {
+                observerCollectionModel.Observers.Add(new ObserveData(observeData));
+            }
+
+            return serialize(observerCollectionModel);
         }
 
         public void ImportData(string data)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(data))
+                return;
+
+            var observerCollectionModel = JsonConvert.DeserializeObject<ObserverCollectionModel>(data);
+            RemoveAll();
+            if (observerCollectionModel != null)
+            {
+                foreach (var observe in observerCollectionModel.Observers)
+                {
+                    Add(observe);
+                }
+            }
+        }
+
+        private string serialize(object data)
+        {
+            JsonSerializer serializer = new JsonSerializer();
+            var textWriter = new StringWriter();
+            serializer.Serialize(textWriter, data);
+            return textWriter.ToString();
         }
     }
 }
