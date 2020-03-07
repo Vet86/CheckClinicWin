@@ -11,7 +11,7 @@ namespace Complex.Tests
         [DataRow("1",22)]
         [DataRow("2",16)]
         [DataRow("3",38)]
-        [DataRow("4",40)]
+        [DataRow("4",38)]
         [DataRow("5",28)]
         [DataRow("6",19)]
         [DataRow("7",25)]
