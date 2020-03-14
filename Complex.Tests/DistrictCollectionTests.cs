@@ -3,14 +3,13 @@ using CheckClinic.Complex.Tests;
 using CheckClinic.DataParser;
 using CheckClinic.Interfaces;
 using CheckClinicDataResolver;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Complex.Tests
 {
-    [TestClass]
     public class DistrictCollectionTests
     {
-        [TestMethod]
+        [Test]
         public void CountTest()
         {
             var settings = ContainerHolder.Container.Resolve<IRequestSettings>();

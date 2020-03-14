@@ -1,14 +1,11 @@
-﻿using Autofac;
-using CheckClinic.DataResolver;
-using CheckClinicDataResolver;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using CheckClinicDataResolver;
+using NUnit.Framework;
 
 namespace DataResolver.Tests
 {
-    [TestClass]
     public class DoctorCollectionDataResolverTests
     {
-        [TestMethod]
+        [Test]
         public void RequestProcessTest()
         {
             var doctorCollectionDataResolver = new DoctorCollectionDataResolver();

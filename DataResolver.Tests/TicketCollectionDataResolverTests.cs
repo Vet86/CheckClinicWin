@@ -1,12 +1,11 @@
 ﻿using CheckClinicDataResolver;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace DataResolver.Tests
 {
-    [TestClass]
     public class TicketCollectionDataResolverTests
     {
-        [TestMethod]
+        [Test]
         public void RequestProcessTest()
         {
             var ticketCollectionDataResolver = new TicketCollectionDataResolver();

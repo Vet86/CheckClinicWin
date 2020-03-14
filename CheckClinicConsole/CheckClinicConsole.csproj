@@ -1,102 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{994FDBA3-0BA2-46F9-A6CD-03FAD5AA1F74}</ProjectGuid>
     <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>CheckClinic.Console</RootNamespace>
-    <AssemblyName>CheckClinicConsole</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="CommandLineArgumentsParser" Version="3.0.20" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="ArgsParser.cs" />
-    <Compile Include="CheckClinicConsoleModule.cs" />
-    <Compile Include="ContainerHolder.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <ProjectReference Include="..\CacheGenerator\CacheGenerator.csproj" />
+    <ProjectReference Include="..\Detector\Detector.csproj" />
+    <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\Model\Model.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CacheGenerator\CacheGenerator.csproj">
-      <Project>{1002522a-f1be-4e4b-9072-0fdd9ef4d5c2}</Project>
-      <Name>CacheGenerator</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DataParser\DataParser.csproj">
-      <Project>{cd700974-fcb8-43ce-886d-e6669b0c4a63}</Project>
-      <Name>DataParser</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DataResolver\DataResolver.csproj">
-      <Project>{c7a4e98d-8b8b-4a12-80f5-f26a6bf509bf}</Project>
-      <Name>DataResolver</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Detector\Detector.csproj">
-      <Project>{6f158d5f-10f2-4f25-add6-89ef7e052356}</Project>
-      <Name>Detector</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Interfaces\Interfaces.csproj">
-      <Project>{ebd4f758-4880-4e76-b466-6ba46b46f14d}</Project>
-      <Name>Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Model\Model.csproj">
-      <Project>{8f7b07ef-f078-47dd-b87a-b0153e71d767}</Project>
-      <Name>Model</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Autofac">
-      <Version>5.1.2</Version>
-    </PackageReference>
-    <PackageReference Include="CommandLineArgumentsParser">
-      <Version>3.0.20</Version>
-    </PackageReference>
-    <PackageReference Include="NuGet.Build.Tasks.Pack">
-      <Version>5.4.0</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
-      <Version>4.7.0</Version>
-    </PackageReference>
-    <PackageReference Include="System.Threading.Tasks.Extensions">
-      <Version>4.5.3</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>

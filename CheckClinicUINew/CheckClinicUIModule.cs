@@ -23,7 +23,7 @@ namespace CheckClinic.UI
             builder.RegisterType<DoctorCollectionParser>().As<IDoctorCollectionParser>();
             builder.RegisterType<TicketCollectionDataResolver>().As<ITicketCollectionDataResolver>();
             builder.RegisterType<TicketCollectionParser>().As<ITicketCollectionParser>();
-            builder.RegisterType<CacheGenerator.CacheGenerator>().As<ICacheGenerator>();
+            //builder.RegisterType<CacheGenerator.CacheGenerator>().As<ICacheGenerator>();
             base.Load(builder);
         }
     }
