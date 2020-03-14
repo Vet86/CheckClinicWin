@@ -1,15 +1,13 @@
 ﻿using CheckClinic.DataParser;
 using CheckClinicDataResolver;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Complex.Tests
 {
-    [TestClass]
     public class SpecialityCollectionTests
     {
-        [DataTestMethod]
-        /*[DataRow("1",22)]
-        [DataRow("18",20)]*/
+        /*[TestCase("1",22)]
+        [TestCase("18",20)]*/
         public void RequestSpecialityTest()
         {
             var specialityCollectionJson = new SpecialityCollectionDataResolver().RequestProcess("591");

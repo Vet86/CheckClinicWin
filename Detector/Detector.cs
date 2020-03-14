@@ -70,7 +70,7 @@ namespace CheckClinic.Detector
         {
             try
             {
-                File.AppendAllText($"log{DateTime.Now.ToShortDateString()}.txt", $"{DateTime.Now.ToString()}: {observeData.DoctorName} has {newTickets.Count} tickets\n");
+                File.AppendAllText(getLogFileName(), $"{DateTime.Now.ToString()}: {observeData.DoctorName} has {newTickets.Count} tickets\n");
                 var cacheTickets = _data[observeData];
                 var newAddedTickets = findNewTickets(cacheTickets, newTickets);
                 if (cacheTickets.Count != newTickets.Count)
@@ -85,8 +85,14 @@ namespace CheckClinic.Detector
             }
             catch(Exception ex)
             {
-                File.AppendAllText($"log{DateTime.Now.ToShortDateString()}.txt", $"{DateTime.Now.ToString()}: {ex.Message}\n");
+                File.AppendAllText(getLogFileName(), $"{DateTime.Now.ToString()}: {ex.Message}\n");
             }
+        }
+
+        private string getLogFileName()
+        {
+            string dateFormat = DateTime.Now.ToShortDateString().Replace("/", "_").Replace("\\", "_");
+            return $"log_{dateFormat}.txt";
         }
 
         private void alarmNewTicket(IObserveData observeData, IEnumerable<ITicket> newTickets)

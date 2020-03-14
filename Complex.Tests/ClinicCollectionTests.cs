@@ -1,31 +1,29 @@
 ﻿using CheckClinic.DataParser;
 using CheckClinicDataResolver;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Complex.Tests
 {
-    [TestClass]
     public class ClinicCollectionTests
     {
-        [DataTestMethod]
-        [DataRow("1",22)]
-        [DataRow("2",16)]
-        [DataRow("3",38)]
-        [DataRow("4",38)]
-        [DataRow("5",28)]
-        [DataRow("6",19)]
-        [DataRow("7",25)]
-        [DataRow("8",29)]
-        [DataRow("9",5)]
-        [DataRow("10",12)]
-        [DataRow("11",29)]
-        [DataRow("12",29)]
-        [DataRow("13",15)]
-        [DataRow("14",7)]
-        [DataRow("15",51)]
-        [DataRow("16",18)]
-        [DataRow("17",29)]
-        [DataRow("18",20)]
+        [TestCase("1",22)]
+        [TestCase("2",16)]
+        [TestCase("3",38)]
+        [TestCase("4",38)]
+        [TestCase("5",28)]
+        [TestCase("6",19)]
+        [TestCase("7",25)]
+        [TestCase("8",29)]
+        [TestCase("9",5)]
+        [TestCase("10",13)]
+        [TestCase("11",29)]
+        [TestCase("12",30)]
+        [TestCase("13",15)]
+        [TestCase("14",7)]
+        [TestCase("15",51)]
+        [TestCase("16",18)]
+        [TestCase("17",29)]
+        [TestCase("18",20)]
         public void RequestClinicsTest(string id, int expectCount)
         {
             var clinicCollectionJson = new ClinicCollectionDataResolver().RequestProcess(id);

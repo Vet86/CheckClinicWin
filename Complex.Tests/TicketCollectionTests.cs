@@ -1,15 +1,12 @@
 ﻿using CheckClinic.DataParser;
 using CheckClinicDataResolver;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Complex.Tests
 {
-    [TestClass]
     public class TicketCollectionTests
     {
-        [DataTestMethod]
-        /*[DataRow("1",22)]
-        [DataRow("18",20)]*/
+        /*[TestCase("1",22)]
+        [TestCase("18",20)]*/
         public void RequestTicketsTest()
         {
             var ticketCollectionJson = new TicketCollectionDataResolver().RequestProcess("255", "д62.51");
