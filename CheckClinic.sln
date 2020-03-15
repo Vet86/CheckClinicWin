@@ -3,31 +3,33 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{8F7B07EF-F078-47DD-B87A-B0153E71D767}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model", "Model\Model.csproj", "{8F7B07EF-F078-47DD-B87A-B0153E71D767}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataResolver", "DataResolver\DataResolver.csproj", "{C7A4E98D-8B8B-4A12-80F5-F26A6BF509BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataResolver", "DataResolver\DataResolver.csproj", "{C7A4E98D-8B8B-4A12-80F5-F26A6BF509BF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckClinicUINew", "CheckClinicUINew\CheckClinicUINew.csproj", "{F5CABA06-AFBF-42E9-8B10-523FC7FA61C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataResolver.Tests", "DataResolver.Tests\DataResolver.Tests.csproj", "{34D7B0BC-B36C-4D54-9A1B-D5DE662D5A1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataResolver.Tests", "DataResolver.Tests\DataResolver.Tests.csproj", "{34D7B0BC-B36C-4D54-9A1B-D5DE662D5A1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataParser", "DataParser\DataParser.csproj", "{CD700974-FCB8-43CE-886D-E6669B0C4A63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataParser", "DataParser\DataParser.csproj", "{CD700974-FCB8-43CE-886D-E6669B0C4A63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Complex.Tests", "Complex.Tests\Complex.Tests.csproj", "{F1CE7601-74AE-4100-82EB-EC9117EACB66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Complex.Tests", "Complex.Tests\Complex.Tests.csproj", "{F1CE7601-74AE-4100-82EB-EC9117EACB66}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{606AEEE1-0562-4159-9E29-FBC48E22B764}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataRequest", "DataRequest\DataRequest.csproj", "{757A87B2-BDCD-4452-A1DF-B3FA6A342B72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataRequest", "DataRequest\DataRequest.csproj", "{757A87B2-BDCD-4452-A1DF-B3FA6A342B72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckClinicConsole", "CheckClinicConsole\CheckClinicConsole.csproj", "{994FDBA3-0BA2-46F9-A6CD-03FAD5AA1F74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckClinicConsole", "CheckClinicConsole\CheckClinicConsole.csproj", "{994FDBA3-0BA2-46F9-A6CD-03FAD5AA1F74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Detector", "Detector\Detector.csproj", "{6F158D5F-10F2-4F25-ADD6-89EF7E052356}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Detector", "Detector\Detector.csproj", "{6F158D5F-10F2-4F25-ADD6-89EF7E052356}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailSender", "MailSender\MailSender.csproj", "{B92F2B6E-F613-475D-B513-D2D73F110773}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailSender", "MailSender\MailSender.csproj", "{B92F2B6E-F613-475D-B513-D2D73F110773}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interfaces", "Interfaces\Interfaces.csproj", "{EBD4F758-4880-4E76-B466-6BA46B46F14D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interfaces", "Interfaces\Interfaces.csproj", "{EBD4F758-4880-4E76-B466-6BA46B46F14D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheGenerator", "CacheGenerator\CacheGenerator.csproj", "{1002522A-F1BE-4E4B-9072-0FDD9EF4D5C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CacheGenerator", "CacheGenerator\CacheGenerator.csproj", "{1002522A-F1BE-4E4B-9072-0FDD9EF4D5C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckClinicBot", "CheckClinicBot\CheckClinicBot.csproj", "{075177C7-CCEC-4A08-A31B-DFE73450695D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +85,10 @@ Global
 		{1002522A-F1BE-4E4B-9072-0FDD9EF4D5C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1002522A-F1BE-4E4B-9072-0FDD9EF4D5C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1002522A-F1BE-4E4B-9072-0FDD9EF4D5C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{075177C7-CCEC-4A08-A31B-DFE73450695D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{075177C7-CCEC-4A08-A31B-DFE73450695D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{075177C7-CCEC-4A08-A31B-DFE73450695D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{075177C7-CCEC-4A08-A31B-DFE73450695D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
