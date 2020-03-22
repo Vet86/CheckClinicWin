@@ -1,10 +1,11 @@
 ﻿using CheckClinic.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace CheckClinic.Detector
 {
-    class MailTextPreparer
+    public class MailTextPreparer
     {
         public MailTextPreparer(IObserveData observeData, IReadOnlyList<ITicket> newTickets, string doctorName)
         {
@@ -17,9 +18,11 @@ namespace CheckClinic.Detector
                 stringBuilder.AppendLine(ticket.Time);
             }
             Content = stringBuilder.ToString();
+            FullMessage = $"{Title}{Environment.NewLine}{Content}";
         }
 
         public string Title { get; }
         public string Content { get; }
+        public string FullMessage { get; }
     }
 }

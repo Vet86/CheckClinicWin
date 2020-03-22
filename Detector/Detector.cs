@@ -66,6 +66,12 @@ namespace CheckClinic.Detector
             }
         }
 
+
+        public bool Exists(IObserveData observeData)
+        {
+            return _data.ContainsKey(observeData);
+        }
+
         private void onNewDataReceived(IObserveData observeData, IReadOnlyList<ITicket> newTickets)
         {
             try
