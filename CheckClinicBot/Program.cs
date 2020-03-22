@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using Telegram.Bot;
-using Telegram.Bot.Args;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace CheckClinic.Bot
 {
@@ -10,31 +6,21 @@ namespace CheckClinic.Bot
     {
         static void Main(string[] args)
         {
-            var telegramProcessor = new TelegramProcessor();
-            //var me = botClient.GetMeAsync().Result;
-            //Console.WriteLine(me.Username);
-            //var markup = new ReplyKeyboardMarkup(new[]
-            //{
-            //        new KeyboardButton("Privet"),
-            //        new KeyboardButton("Hello"),
-            //        new KeyboardButton("Zdarova"),
-            //});
-            //markup.OneTimeKeyboard = true;
-            //botClient.SendTextMessageAsync(chatId, "Hello", replyMarkup: markup);
+            if (args.Length < 1)
+            {
+                Console.WriteLine("Token must be set as first parameter");
+                return;
+            }
+
+            try
+            {
+                var telegramProcessor = new TelegramProcessor(args[0]);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
             Console.ReadKey();
-        }
-
-        private static void BotClient_OnCallbackQuery(object sender, CallbackQueryEventArgs e)
-        {
-        }
-
-        private static void onMessage(object sender, MessageEventArgs e)
-        {
-        }
-
-        static void HandleMessage(object sender, MessageEventArgs messageEventArgs)
-        {
-            
         }
     }
 }

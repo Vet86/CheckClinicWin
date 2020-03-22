@@ -1,96 +1,27 @@
 ﻿using Autofac;
+using CheckClinic.Detector;
 using CheckClinic.Interfaces;
-using System;
+using CheckClinic.Model;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Telegram.Bot;
 using Telegram.Bot.Args;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace CheckClinic.Bot
 {
-    class TelegramProcessor
+    internal class TelegramProcessor
     {
-        enum Level
-        {
-            Start,
-            SelectDistric,
-            SelectClinic,
-            SelectSpec,
-            SelectDoctor,
-            SelectTicket
-        }
-
-        class DataInfo
-        {
-            public IDistrict District { get; set; }
-            public IClinic Clinic { get; set; }
-            public ISpeciality Speciality { get; set; }
-            public IDoctor Doctor { get; set; }
-        }
-
-        class ChatInfo
-        {
-            public Level ChatLevel { get; set; }
-            public DataInfo Info { get; set; } = new DataInfo();
-
-            public ChatInfo(Level chatLevel)
-            {
-                ChatLevel = chatLevel;
-            }
-
-            public void Clear()
-            {
-                Info.District = null;
-                Info.Clinic = null;
-                Info.Speciality = null;
-                Info.Doctor = null;
-            }
-
-            public void SetDistrict(IDistrict district)
-            {
-                Info.District = district;
-                Info.Clinic = null;
-                Info.Speciality = null;
-                Info.Doctor = null;
-            }
-
-            public void SetClinic(IClinic clinic)
-            {
-                Info.Clinic = clinic;
-                Info.Speciality = null;
-                Info.Doctor = null;
-            }
-
-            public void SetSpeciality(ISpeciality speciality)
-            {
-                Info.Speciality = speciality;
-                Info.Doctor = null;
-            }
-
-            public void SetDoctor(IDoctor doctor)
-            {
-                Info.Doctor = doctor;
-            }
-        }
-
         #region private fields 
-        TelegramBotClient _botClient = new TelegramBotClient("");
-
-        private readonly IDetector _detector = ContainerHolder.Container.Resolve<IDetector>();
+        private TelegramBotClient _botClient;
         private readonly Repository _repository = new Repository();
-
-        //private string _districts = null;
-        private List<KeyValuePair<IDistrict, KeyboardButton>> _districtToKey = new List<KeyValuePair<IDistrict, KeyboardButton>>();
-        private Dictionary<string, List<KeyValuePair<IClinic, KeyboardButton>>> _clinicToKey = new Dictionary<string, List<KeyValuePair<IClinic, KeyboardButton>>>();
         private Dictionary<long, ChatInfo> _chatsInfo = new Dictionary<long, ChatInfo>();
         #endregion
 
-        public TelegramProcessor()
+        public TelegramProcessor(string token)
         {
+            _botClient = new TelegramBotClient(token);
             _botClient.OnMessage += onMessage;
-            _botClient.OnCallbackQuery += onCallbackQuery;
             _botClient.StartReceiving();
         }
 
@@ -99,194 +30,267 @@ namespace CheckClinic.Bot
             _botClient.StopReceiving();
         }
 
-        private void onCallbackQuery(object sender, CallbackQueryEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         private void onMessage(object sender, MessageEventArgs messageEventArgs)
         {
             var chatId = messageEventArgs.Message.Chat.Id;
 
             if (!_chatsInfo.ContainsKey(chatId) || messageEventArgs.Message.Text == @"/start")
             {
-                _chatsInfo[chatId] = new ChatInfo(Level.Start);
+                _chatsInfo[chatId] = new ChatInfo(chatId, Level.Start);
             }
 
             ChatInfo chatInfo = _chatsInfo[chatId];
-            int i = 0;
-            if (chatInfo.ChatLevel != Level.Start)
-            {
-                if (int.TryParse(messageEventArgs.Message.Text, out i))
-                {
-                    if (i < 0)
-                    {
-                        _botClient.SendTextMessageAsync(chatId, "Неверная команда");
-                        return;
-                    }
+            var commandInfo = new CommandInfo(messageEventArgs.Message.Text);
 
-                    if (i == 0)
-                    {
-                        if (chatInfo.ChatLevel >= Level.SelectDoctor && messageEventArgs.Message.Text == "00")
-                        {
-                            chatInfo.ChatLevel = (Level)Math.Max(0, (int)chatInfo.ChatLevel - 1);
-                        }
-                        else if (chatInfo.ChatLevel != Level.SelectDistric)
-                        {
-                            chatInfo.ChatLevel = (Level)Math.Max(0, (int)chatInfo.ChatLevel - 2);
-                        }
-                        else
-                        {
-                            _botClient.SendTextMessageAsync(chatId, "Неверная команда");
-                            return;
-                        }
-                    }
-                }
-                else
-                {
-                    _botClient.SendTextMessageAsync(chatId, "Неверная команда");
-                    return;
-                }
-            }
+            doStep(chatInfo, commandInfo);
+        }
 
+        private void doStep(ChatInfo chatInfo, CommandInfo commandInfo)
+        {
             switch (chatInfo.ChatLevel)
             {
                 case Level.Start:
                     {
-                        _botClient.SendChatActionAsync(chatId, Telegram.Bot.Types.Enums.ChatAction.Typing);
-                        _botClient.SendTextMessageAsync(chatId, getDistrictsMessage());
+                        _botClient.SendChatActionAsync(chatInfo.ChatId, Telegram.Bot.Types.Enums.ChatAction.Typing);
+                        _botClient.SendTextMessageAsync(chatInfo.ChatId, getDistrictsMessage());
                         chatInfo.ChatLevel = Level.SelectDistric;
                         chatInfo.Clear();
                         return;
                     }
                 case Level.SelectDistric:
                     {
-                        var districts = _repository.GetDistricts();
-                        if (i > districts.Count)
-                        {
-                            _botClient.SendTextMessageAsync(chatId, "Неверная команда");
-                            return;
-                        }
-
-                        IDistrict district;
-                        if (i == 0)
-                        {
-                            district = (IDistrict)chatInfo.Info.District;
-                        }
-                        else
-                        {
-                            district = districts[i - 1];
-                        }
-
-                        _botClient.SendChatActionAsync(chatId, Telegram.Bot.Types.Enums.ChatAction.Typing);
-                        _botClient.SendTextMessageAsync(chatId, getClinicsMessage(district));
-                        chatInfo.ChatLevel = Level.SelectClinic;
-                        chatInfo.SetDistrict(district);
+                        doSelectDistrict(chatInfo, commandInfo);
                         return;
                     }
                 case Level.SelectClinic:
                     {
-                        var district = chatInfo.Info.District;
-                        if (district == null)
-                            return;
-
-                        var clinics = _repository.GetClinics(district);
-                        if (i > clinics.Count)
-                        {
-                            _botClient.SendTextMessageAsync(chatId, "Неверная команда");
-                            return;
-                        }
-
-                        IClinic clinic;
-                        if (i == 0)
-                        {
-                            clinic = chatInfo.Info.Clinic;
-                        }                        
-                        else
-                        {
-                            clinic = clinics[i - 1];
-                        }
-
-                        _botClient.SendChatActionAsync(chatId, Telegram.Bot.Types.Enums.ChatAction.Typing);
-                        _botClient.SendTextMessageAsync(chatId, getSpecialitiesMessage(clinic));
-                        chatInfo.ChatLevel = Level.SelectSpec;
-                        chatInfo.SetClinic(clinic);
+                        doSelectClinic(chatInfo, commandInfo);
                         return;
                     }
                 case Level.SelectSpec:
                     {
-                        IClinic clinic = chatInfo.Info.Clinic;
-                        if (clinic == null)
-                            return;
-
-                        var specialities = _repository.GetSpecialities(clinic);
-                        if (i > specialities.Count)
-                        {
-                            _botClient.SendTextMessageAsync(chatId, "Неверная команда");
-                            return;
-                        }
-
-                        ISpeciality speciality;
-                        if (i == 0)
-                        {
-                            speciality = chatInfo.Info.Speciality;
-                        }
-                        else
-                        {
-                            speciality = specialities[i - 1];
-                        }
-
-                        _botClient.SendChatActionAsync(chatId, Telegram.Bot.Types.Enums.ChatAction.Typing);
-                        _botClient.SendTextMessageAsync(chatId, getDoctorsMessage(clinic, speciality));
-                        chatInfo.ChatLevel = Level.SelectDoctor;
-                        chatInfo.SetSpeciality(speciality);
+                        doSelectSpec(chatInfo, commandInfo);
                         return;
                     }
                 case Level.SelectDoctor:
                     {
-                        IClinic clinic = chatInfo.Info.Clinic;
-                        if (clinic == null)
-                            return;
-
-                        ISpeciality speciality = chatInfo.Info.Speciality;
-                        if (speciality == null)
-                            return;
-
-                        var doctors = _repository.GetDoctors(clinic, speciality);
-                        if (i > doctors.Count)
-                        {
-                            _botClient.SendTextMessageAsync(chatId, "Неверная команда");
-                            return;
-                        }
-
-                        IDoctor doctor;
-                        if (i == 0)
-                        {
-                            doctor = chatInfo.Info.Doctor;
-                        }
-                        else
-                        {
-                            doctor = doctors[i - 1];
-                        }
-
-                        _botClient.SendChatActionAsync(chatId, Telegram.Bot.Types.Enums.ChatAction.Typing);
-                        _botClient.SendTextMessageAsync(chatId, getTicketsMessage(clinic, doctor));
-                        chatInfo.ChatLevel = Level.SelectTicket;
-                        chatInfo.SetDoctor(doctor);
+                        doSelectDoctor(chatInfo, commandInfo);
+                        return;
+                    }
+                case Level.SelectTicket:
+                    {
+                        doSelectTicket(chatInfo, commandInfo);
                         return;
                     }
             }
+        }
 
-            //var district = _districtToKey.FirstOrDefault(x => x.Value.Text == messageEventArgs.Message.Text);
-            //if (district != default( KeyValuePair<IDistrict, KeyboardButton>())
+        private void doSelectDistrict(ChatInfo chatInfo, CommandInfo commandInfo)
+        {
+            IDistrict district;
+            switch (commandInfo.Command)
             {
+                case Commands.RefreshByCommand:
+                    district = chatInfo.Info.District;
+                    break;
+                case Commands.SelectItem:
+                    {
+                        var districts = _repository.GetDistricts();
+                        if (commandInfo.Index > districts.Count || commandInfo.Index <= 0)
+                        {
+                            sendErrorCommand(chatInfo.ChatId, commandInfo.OriginalCommand);
+                            return;
+                        }
+                        district = districts[commandInfo.Index - 1];
+                        break;
+                    }
+                default:
+                    sendErrorCommand(chatInfo.ChatId, commandInfo.OriginalCommand);
+                    return;
+            }
 
+            _botClient.SendChatActionAsync(chatInfo.ChatId, Telegram.Bot.Types.Enums.ChatAction.Typing);
+            _botClient.SendTextMessageAsync(chatInfo.ChatId, getClinicsMessage(district));
+            chatInfo.ChatLevel = Level.SelectClinic;
+            chatInfo.SetDistrict(district);
+        }
+
+        private void doSelectClinic(ChatInfo chatInfo, CommandInfo commandInfo)
+        {
+            var district = chatInfo.Info.District;
+            if (district == null)
+                return;
+
+            IClinic clinic;
+            switch (commandInfo.Command)
+            {
+                case Commands.Back:
+                    commandInfo.Command = Commands.RefreshByCommand;
+                    chatInfo.ChatLevel = Level.Start;
+                    doStep(chatInfo, commandInfo);
+                    return;
+                case Commands.RefreshByCommand:
+                    clinic = chatInfo.Info.Clinic;
+                    break;
+                case Commands.SelectItem:
+                    {
+                        var clinics = _repository.GetClinics(district);
+                        if (commandInfo.Index > clinics.Count || commandInfo.Index <= 0)
+                        {
+                            sendErrorCommand(chatInfo.ChatId, commandInfo.OriginalCommand);
+                            return;
+                        }
+                        clinic = clinics[commandInfo.Index - 1];
+                        break;
+                    }
+                default:
+                    sendErrorCommand(chatInfo.ChatId, commandInfo.OriginalCommand);
+                    return;
+            }
+
+            _botClient.SendChatActionAsync(chatInfo.ChatId, Telegram.Bot.Types.Enums.ChatAction.Typing);
+            _botClient.SendTextMessageAsync(chatInfo.ChatId, getSpecialitiesMessage(clinic));
+            chatInfo.ChatLevel = Level.SelectSpec;
+            chatInfo.SetClinic(clinic);
+        }
+
+        private void doSelectSpec(ChatInfo chatInfo, CommandInfo commandInfo)
+        {
+            IClinic clinic = chatInfo.Info.Clinic;
+            if (clinic == null)
+                return;
+
+            ISpeciality speciality;
+            switch (commandInfo.Command)
+            {
+                case Commands.Back:
+                    commandInfo.Command = Commands.RefreshByCommand;
+                    chatInfo.ChatLevel = Level.SelectDistric;
+                    doStep(chatInfo, commandInfo);
+                    return;
+                case Commands.RefreshByCommand:
+                    speciality = chatInfo.Info.Speciality;
+                    break;
+                case Commands.SelectItem:
+                    {
+                        var specialities = _repository.GetSpecialities(clinic);
+                        if (commandInfo.Index > specialities.Count || commandInfo.Index <= 0)
+                        {
+                            sendErrorCommand(chatInfo.ChatId, commandInfo.OriginalCommand);
+                            return;
+                        }
+                        speciality = specialities[commandInfo.Index - 1];
+                        break;
+                    }
+                default:
+                    sendErrorCommand(chatInfo.ChatId, commandInfo.OriginalCommand);
+                    return;
+            }
+
+            _botClient.SendChatActionAsync(chatInfo.ChatId, Telegram.Bot.Types.Enums.ChatAction.Typing);
+            _botClient.SendTextMessageAsync(chatInfo.ChatId, getDoctorsMessage(clinic, speciality));
+            chatInfo.ChatLevel = Level.SelectDoctor;
+            chatInfo.SetSpeciality(speciality);
+        }
+
+        private void doSelectDoctor(ChatInfo chatInfo, CommandInfo commandInfo)
+        {
+            IClinic clinic = chatInfo.Info.Clinic;
+            if (clinic == null)
+                return;
+
+            ISpeciality speciality = chatInfo.Info.Speciality;
+            if (speciality == null)
+                return;
+
+            IDoctor doctor;
+            switch (commandInfo.Command)
+            {
+                case Commands.Back:
+                    commandInfo.Command = Commands.RefreshByCommand;
+                    chatInfo.ChatLevel = Level.SelectClinic;
+                    doStep(chatInfo, commandInfo);
+                    return;
+                case Commands.Refresh:
+                    commandInfo.Command = Commands.RefreshByCommand;
+                    chatInfo.ChatLevel = Level.SelectSpec;
+                    doStep(chatInfo, commandInfo);
+                    return;
+                case Commands.RefreshByCommand:
+                    doctor = chatInfo.Info.Doctor;
+                    break;
+                case Commands.SelectItem:
+                    {
+                        var doctors = _repository.GetDoctors(clinic, speciality);
+                        if (commandInfo.Index > doctors.Count || commandInfo.Index <= 0)
+                        {
+                            sendErrorCommand(chatInfo.ChatId, commandInfo.OriginalCommand);
+                            return;
+                        }
+                        doctor = doctors[commandInfo.Index - 1];
+                        break;
+                    }
+                default:
+                    sendErrorCommand(chatInfo.ChatId, commandInfo.OriginalCommand);
+                    return;
+            }
+
+            _botClient.SendChatActionAsync(chatInfo.ChatId, Telegram.Bot.Types.Enums.ChatAction.Typing);
+            _botClient.SendTextMessageAsync(chatInfo.ChatId, getTicketsMessage(clinic, doctor));
+            chatInfo.ChatLevel = Level.SelectTicket;
+            chatInfo.SetDoctor(doctor);
+        }
+
+        private void doSelectTicket(ChatInfo chatInfo, CommandInfo commandInfo)
+        {
+            switch (commandInfo.Command)
+            {
+                case Commands.Back:
+                    commandInfo.Command = Commands.RefreshByCommand;
+                    chatInfo.ChatLevel = Level.SelectSpec;
+                    doStep(chatInfo, commandInfo);
+                    return;
+                case Commands.Refresh:
+                    commandInfo.Command = Commands.RefreshByCommand;
+                    chatInfo.ChatLevel = Level.SelectDoctor;
+                    doStep(chatInfo, commandInfo);
+                    return;
+                case Commands.Subscribe:
+                    {
+                        if (chatInfo.Detector == null)
+                        {
+                            chatInfo.Detector = ContainerHolder.Container.Resolve<IDetector>();
+                            chatInfo.TicketsEventHandler += onTicketsAdded;
+                            chatInfo.Detector.AddListener(chatInfo);
+                        }
+
+                        var observe = new ObserveData(chatInfo.Info.Clinic.Id, chatInfo.Info.Doctor.Id, chatInfo.Info.Doctor.DoctorName);
+                        if (chatInfo.Detector.Exists(observe))
+                        {
+                            _botClient.SendTextMessageAsync(chatInfo.ChatId, "Вы уже подписаны на этого врача");
+                            return;
+                        }
+                        chatInfo.Detector.Add(observe);
+                        _botClient.SendTextMessageAsync(chatInfo.ChatId, $"Мы начали следить за номерками {chatInfo.Info.Doctor.DoctorName}");
+                        break;
+                    }
+                default:
+                    sendErrorCommand(chatInfo.ChatId, commandInfo.OriginalCommand);
+                    return;
             }
         }
 
-        private void doStep()
+        private void onTicketsAdded(ChatInfo chatInfo, IObserveData observeData, IEnumerable<ITicket> tickets)
         {
+            try
+            {
+                var mailTextPreparer = new MailTextPreparer(observeData, tickets.ToList(), observeData.DoctorName);
+                _botClient.SendTextMessageAsync(chatInfo.ChatId, mailTextPreparer.FullMessage);
+            }
+            catch
+            {
 
+            }
         }
 
         private string getDistrictsMessage()
@@ -365,5 +369,9 @@ namespace CheckClinic.Bot
             return stringBuilder.ToString();
         }
 
+        private void sendErrorCommand(long chatId, string command)
+        {
+            _botClient.SendTextMessageAsync(chatId, "Неверная команда");
+        }
     }
 }

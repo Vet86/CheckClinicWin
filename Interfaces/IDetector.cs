@@ -7,6 +7,7 @@ namespace CheckClinic.Interfaces
     public interface IDetector
     {
         void Add(IObserveData observeData);
+        bool Exists(IObserveData observeData);
         void Add(IObserveData observeData, DateTime dateTime);
         void Remove(IObserveData observeData);
         void RemoveAll();
