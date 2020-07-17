@@ -66,7 +66,7 @@ namespace CheckClinic.DataRequest
 
         private void onTimerTick(object state)
         {
-            foreach (var obs in _observes)
+            foreach (var obs in _observes.ToArray())
             {
                 try
                 {
