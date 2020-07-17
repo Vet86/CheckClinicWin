@@ -7,10 +7,10 @@ namespace CheckClinicDataResolver
     {
         public string RequestProcess(string clinicId)
         {
-            RestClient client = new RestClient("https://www.gorzdrav.spb.ru/api/check_clinic/");
+            RestClient client = new RestClient("https://beta.gorzdrav.spb.ru/api/check_clinic/");
             RestRequest request = new RestRequest(Method.POST);
-            request.AddHeader("Referrer", "https://www.gorzdrav.spb.ru/signup/free/?");
-            request.AddHeader("Host", "www.gorzdrav.spb.ru");
+            request.AddHeader("Referrer", "https://beta.gorzdrav.spb.ru/signup/free/?");
+            request.AddHeader("Host", "beta.gorzdrav.spb.ru");
             request.AddHeader("X-Requested-With", "XMLHttpRequest");
             request.AddParameter("clinic_form-clinic_id", clinicId, ParameterType.GetOrPost);
 

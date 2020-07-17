@@ -16,8 +16,8 @@ namespace CheckClinicDataResolver
         {
             RestClient client = new RestClient(_requestSettings.Site);
             RestRequest request = new RestRequest(Method.GET);
-            request.AddHeader("Referrer", "https://www.gorzdrav.spb.ru/signup/free/?");
-            request.AddHeader("Host", "www.gorzdrav.spb.ru");
+            request.AddHeader("Referrer", "https://beta.gorzdrav.spb.ru/signup/free/?");
+            request.AddHeader("Host", "beta.gorzdrav.spb.ru");
             request.AddHeader("X-Requested-With", "XMLHttpRequest");
 
             IRestResponse response = client.Execute(request);
